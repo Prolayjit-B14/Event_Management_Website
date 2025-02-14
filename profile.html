@@ -3,29 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <header>
-        <h1>👤 User Profile</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">🏠 Home</a></li>
-                <li><a href="events.html">📅 Events</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <section class="profile">
-        <img src="assets/profile-pic.png" alt="Profile Picture">
-        <h2>John Doe</h2>
-        <p>📧 Email: john@example.com</p>
-        <p>🏅 Achievements: Hackathon Winner 2024</p>
-        <div class="social-links">
-            <a href="https://twitter.com" target="_blank">🐦 Twitter</a>
-            <a href="https://linkedin.com" target="_blank">💼 LinkedIn</a>
-            <a href="https://github.com" target="_blank">💻 GitHub</a>
+<body class="bg-gray-900 text-white">
+    <nav class="bg-gray-800 p-4 shadow-lg fixed w-full top-0">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">Profile</h1>
+            <a href="index.html" class="hover:text-yellow-400">Back to Home</a>
+        </div>
+    </nav>
+    
+    <section class="p-10 pt-20 text-center fade-in">
+        <h2 class="text-3xl font-bold">User Profile</h2>
+        <p class="text-gray-400 mt-2">View and update your profile information</p>
+        
+        <div class="mt-6 bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg mx-auto">
+            <img src="assets/profile-placeholder.png" alt="Profile Picture" class="rounded-full w-32 mx-auto">
+            <h3 class="text-xl font-bold mt-4">John Doe</h3>
+            <p class="text-gray-400">@johndoe</p>
+            
+            <div class="mt-4 text-left">
+                <p><strong>Email:</strong> johndoe@example.com</p>
+                <p><strong>Role:</strong> Participant</p>
+                <p><strong>Joined:</strong> January 2025</p>
+            </div>
+            
+            <button class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Edit Profile</button>
         </div>
     </section>
 </body>

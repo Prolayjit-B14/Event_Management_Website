@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Seamless Event Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Navbar -->
+    <nav class="bg-gray-800 p-4 fixed w-full top-0 shadow-lg z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">Event Management</h1>
+            <ul class="flex space-x-6">
+                <li><a href="index.html" class="hover:text-blue-400">Home</a></li>
+                <li><a href="events.html" class="hover:text-blue-400">Events</a></li>
+                <li><a href="leaderboard.html" class="hover:text-blue-400">Leaderboard</a></li>
+                <li><a href="profile.html" class="hover:text-blue-400">Profile</a></li>
+                <li><a href="gallery.html" class="hover:text-blue-400">Gallery</a></li>
+                <li><a href="forum.html" class="hover:text-blue-400">Forum</a></li>
+                <li><a href="tracking.html" class="hover:text-blue-400">Tracking</a></li>
+                <li><a href="judging.html" class="hover:text-blue-400">Judging</a></li>
+                <li><a href="certificates.html" class="hover:text-blue-400">Certificates</a></li>
+                <li><a href="blog.html" class="hover:text-blue-400">Blog</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Dashboard Content -->
+    <section class="pt-24 p-8">
+        <h2 class="text-4xl font-bold text-center mb-8">Dashboard Overview</h2>
+        <div class="grid grid-cols-3 gap-6">
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center animate-fadeIn">
+                <h3 class="text-xl font-semibold">Total Events</h3>
+                <p class="text-3xl font-bold text-yellow-400">12</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center animate-fadeIn">
+                <h3 class="text-xl font-semibold">Active Participants</h3>
+                <p class="text-3xl font-bold text-green-400">250</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center animate-fadeIn">
+                <h3 class="text-xl font-semibold">Upcoming Events</h3>
+                <p class="text-3xl font-bold text-blue-400">3</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Recent Activity -->
+    <section class="p-8">
+        <h2 class="text-3xl font-bold text-center mb-6">Recent Activities</h2>
+        <ul class="bg-gray-800 p-6 rounded-lg shadow-lg space-y-4">
+            <li class="p-4 bg-gray-700 rounded-lg">John Doe won <span class="text-yellow-400">Hackathon 2025</span></li>
+            <li class="p-4 bg-gray-700 rounded-lg">New event <span class="text-blue-400">Code Sprint</span> added for April 15</li>
+            <li class="p-4 bg-gray-700 rounded-lg">Leaderboard updated</li>
+        </ul>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="p-6 bg-gray-800 text-center">
+        <p>&copy; 2025 Seamless Event Management. All rights reserved.</p>
+    </footer>
+</body>
+</html>

@@ -4,20 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum</title>
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <header>
-        <h1>💬 Discussion Forum</h1>
-    </header>
-
-    <section class="forum">
-        <div class="post">
-            <h3>John Doe</h3>
-            <p>What's the best way to prepare for a hackathon?</p>
+<body class="bg-gray-900 text-white">
+    <nav class="bg-gray-800 p-4 shadow-lg fixed w-full top-0">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">Forum</h1>
+            <a href="index.html" class="hover:text-yellow-400">Back to Home</a>
+        </div>
+    </nav>
+    
+    <section class="p-10 pt-20 text-center fade-in">
+        <h2 class="text-3xl font-bold">Community Forum</h2>
+        <p class="text-gray-400 mt-2">Join discussions, ask questions, and share ideas.</p>
+        
+        <div class="mt-6 bg-gray-800 p-6 rounded-lg shadow-lg max-w-3xl mx-auto">
+            <textarea id="new-post" class="w-full p-3 rounded bg-gray-700 text-white" placeholder="Write something..."></textarea>
+            <button onclick="addPost()" class="mt-3 bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded">Post</button>
+        </div>
+        
+        <div id="posts" class="mt-6 max-w-3xl mx-auto space-y-4">
+            <!-- Forum posts will appear here -->
         </div>
     </section>
 
-    <script src="script.js"></script>
+    <script>
+        function addPost() {
+            const postText = document.getElementById('new-post').value;
+            if (postText.trim() !== "") {
+                const postContainer = document.createElement('div');
+                postContainer.classList.add('bg-gray-800', 'p-4', 'rounded', 'shadow-lg');
+                postContainer.innerHTML = `<p>${postText}</p><p class='text-gray-500 text-sm'>Just now</p>`;
+                document.getElementById('posts').prepend(postContainer);
+                document.getElementById('new-post').value = "";
+            }
+        }
+    </script>
 </body>
 </html>

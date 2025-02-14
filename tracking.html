@@ -3,18 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Tracking</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Tracking & Notifications</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <header>
-        <h1>⏳ Live Event Updates</h1>
-    </header>
-
-    <section class="tracking">
-        <p>📢 Hackathon starts in: <span id="countdown">Loading...</span></p>
+<body class="bg-gray-900 text-white">
+    <nav class="bg-gray-800 p-4 shadow-lg fixed w-full top-0">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">Tracking & Notifications</h1>
+            <a href="index.html" class="hover:text-yellow-400">Back to Home</a>
+        </div>
+    </nav>
+    
+    <section class="p-10 pt-20 text-center">
+        <h2 class="text-3xl font-bold">Live Event Tracking</h2>
+        <p class="text-gray-400 mt-2">Stay updated with real-time event status</p>
+        
+        <div class="mt-6 bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-semibold">Live Updates</h3>
+            <ul id="live-updates" class="mt-4 space-y-3 text-left">
+                <li class="bg-gray-700 p-3 rounded">Event Kickoff - 10:00 AM</li>
+                <li class="bg-gray-700 p-3 rounded">Round 1 Started - 10:30 AM</li>
+                <li class="bg-gray-700 p-3 rounded">Live Q&A Session - 11:00 AM</li>
+            </ul>
+        </div>
     </section>
 
-    <script src="script.js"></script>
+    <script>
+        // Simulating real-time updates
+        const updates = [
+            "Round 2 Started - 12:00 PM",
+            "Final Round Commences - 2:00 PM",
+            "Winners Announced - 4:00 PM"
+        ];
+        let index = 0;
+        
+        setInterval(() => {
+            if (index < updates.length) {
+                const newUpdate = document.createElement('li');
+                newUpdate.className = "bg-gray-700 p-3 rounded";
+                newUpdate.textContent = updates[index++];
+                document.getElementById('live-updates').appendChild(newUpdate);
+            }
+        }, 5000);
+    </script>
 </body>
 </html>

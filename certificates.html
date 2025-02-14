@@ -4,15 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certificates</title>
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <header>
-        <h1>🎖 Certificates</h1>
-    </header>
-
-    <section class="certificates">
-        <p>Generate and download your certificates here.</p>
+<body class="bg-gray-900 text-white">
+    <nav class="bg-gray-800 p-4 shadow-lg fixed w-full top-0">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">Certificates</h1>
+            <a href="index.html" class="hover:text-yellow-400">Back to Home</a>
+        </div>
+    </nav>
+    
+    <section class="p-10 pt-20 text-center fade-in">
+        <h2 class="text-3xl font-bold">Generate Your Certificate</h2>
+        <p class="text-gray-400 mt-2">Enter your details to download your certificate</p>
+        
+        <div class="mt-6 bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg mx-auto">
+            <input id="name" type="text" placeholder="Enter Your Name" class="w-full p-3 rounded mb-3 text-black">
+            <button onclick="generateCertificate()" class="bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded text-white">Generate Certificate</button>
+        </div>
+        
+        <canvas id="certificateCanvas" class="mt-6 hidden"></canvas>
+        <a id="downloadLink" class="hidden mt-4 text-blue-400 hover:underline">Download Certificate</a>
     </section>
+
+    <script>
+        function generateCertificate() {
+            const name = document.getElementById('name').value;
+            if (!name) {
+                alert('Please enter your name!');
+                return;
+            }
+
+            const canvas = document.getElementById('certificateCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 800;
+            canvas.height = 600;
+            
+            // Background
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Border
+            ctx.strokeStyle = "#000";
+            ctx.lineWidth = 5;
+            ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+            
+            // Title
+            ctx.fillStyle = "#000";
+            ctx.font = "40px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText("Certificate of Achievement", canvas.width / 2, 100);
+            
+            // Name
+            ctx.font = "30px Arial";
+            ctx.fillText(name, canvas.width / 2, 250);
+            
+            // Footer
+            ctx.font = "20px Arial";
+            ctx.fillText("Presented by Seamless Event Management", canvas.width / 2, 400);
+            
+            document.getElementById('certificateCanvas').classList.remove('hidden');
+            const downloadLink = document.getElementById('downloadLink');
+            downloadLink.href = canvas.toDataURL('image/png');
+            downloadLink.download = name + "_certificate.png";
+            downloadLink.classList.remove('hidden');
+            downloadLink.textContent = "Download Your Certificate";
+        }
+    </script>
 </body>
 </html>
