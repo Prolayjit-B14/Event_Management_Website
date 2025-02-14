@@ -35,6 +35,9 @@
                 <li><a href="#tracking" class="hover:text-blue-400">Tracking</a></li>
                 <li><a href="#judging" class="hover:text-blue-400">Judging</a></li>
                 <li><a href="#certificates" class="hover:text-blue-400">Certificates</a></li>
+                <li><a href="#dashboard" class="hover:text-blue-400">Dashboard</a></li>
+                <li><a href="#soicals" class="hover:text-blue-400">Socials</a></li>
+                <li><a href="#blog" class="hover:text-blue-400">Blogs</a></li>
             </ul>
         </div>
     </nav>
@@ -46,7 +49,7 @@
         <a href="#events" class="mt-6 px-6 py-3 bg-yellow-400 hover:bg-yellow-500 rounded-full text-black">Get Started</a>
     </section>
 
-    <section class="p-10 pt-20 text-center fade-in">
+    <section id="profile" section class="p-10 pt-20 text-center fade-in">
         <h2 class="text-3xl font-bold">User Profile</h2>
         <p class="text-gray-400 mt-2">View and update your profile information</p>
         
@@ -145,7 +148,7 @@
     </script>
     </section>
 
-        <section class="mt-16 p-8 text-center">
+        <section id="events" section class="mt-16 p-8 text-center">
         <h2 class="text-3xl font-bold">Upcoming Events</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
             <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition-transform">
@@ -174,7 +177,7 @@
     </section>
 
     <!-- Leaderboard -->
-    <section class="p-10 pt-20 text-center fade-in">
+    <ssection id="leaderboard" section class="p-10 pt-20 text-center fade-in">
         <h2 class="text-3xl font-bold">Live Leaderboard</h2>
         <p class="text-gray-400 mt-2">Check out the latest rankings of participants</p>
         
@@ -206,7 +209,7 @@
                 </tbody>
             </table>
         </div>
-    </section>
+    </ssection>
 
     <script>
         // Simulate real-time updates (mock data)
@@ -301,6 +304,7 @@
     </section>
 
     <!-- Blog Section -->
+    <section id="blog" class="p-8 text-center fade-in">
         <h2 class="text-3xl font-bold text-center">Latest Blog Posts</h2>
         <p class="text-gray-400 text-center mt-2">Stay updated with the latest news and insights</p>
         
@@ -371,6 +375,7 @@
 </section>
 
 <section class="p-10 pt-20">
+<section id="socials" class="p-8 text-center fade-in">
         <h2 class="text-3xl font-bold text-center">Stay Connected</h2>
         <p class="text-gray-400 text-center mt-2">Share, discuss, and engage with the community</p>
         
