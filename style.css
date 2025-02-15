@@ -1,66 +1,79 @@
-/* Global Styles */
+/* 🌑 Global Styles */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #111827;
+    font-family: 'Poppins', sans-serif;
+    background-color: #0a0f1e;
     color: white;
     margin: 0;
     padding: 0;
     scroll-behavior: smooth;
 }
 
-/* Navbar */
+/* 🔝 Navbar */
 nav {
-    background: linear-gradient(90deg, #1e3a8a, #2563eb);
-    padding: 12px;
+    background: linear-gradient(90deg, #1e3a8a, #9333ea);
+    padding: 15px;
     position: fixed;
     width: 100%;
     top: 0;
-    z-index: 100;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
+
 nav ul {
     list-style: none;
     display: flex;
     justify-content: center;
     gap: 20px;
 }
+
 nav ul li a {
     color: white;
     text-decoration: none;
     padding: 10px 15px;
-    transition: all 0.3s ease-in-out;
-    border-radius: 5px;
-}
-nav ul li a:hover {
-    background: rgba(255, 255, 255, 0.2);
-    color: #ffcc00;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    border-radius: 8px;
 }
 
-/* Sections with Different Colors */
+nav ul li a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #facc15;
+}
+
+/* 🌈 Sections with Different Background Colors */
 section:nth-child(odd) {
-    background: linear-gradient(90deg, #1e40af, #1e3a8a);
+    background: #1e293b;
 }
 section:nth-child(even) {
-    background: linear-gradient(90deg, #047857, #059669);
+    background: #111827;
 }
 section {
     padding: 80px 20px;
     text-align: center;
     margin-top: 60px;
-    color: white;
-    transition: background 0.5s ease-in-out;
-}
-h2 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
+    transition: background 0.3s ease-in-out;
 }
 
-/* Animations */
+/* 🏆 Leaderboard Animation */
+.score-update {
+    animation: pop 0.5s ease-in-out;
+    color: #facc15;
+    font-weight: bold;
+}
+
+@keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* 🚀 Animations for Live Updates */
 .fade-in {
     opacity: 0;
     transform: translateY(30px);
-    animation: fadeInUp 1s ease-out forwards;
+    animation: fadeInUp 0.8s ease-out forwards;
 }
+
 @keyframes fadeInUp {
     to {
         opacity: 1;
@@ -68,108 +81,82 @@ h2 {
     }
 }
 
-.slide-in {
-    opacity: 0;
-    transform: translateX(-50px);
-    animation: slideIn 1s ease-in-out forwards;
-}
-@keyframes slideIn {
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+/* 🖼️ Cards & Containers */
+.bg-gray-800 {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    transition: transform 0.3s ease-in-out, background 0.3s ease-in-out;
 }
 
-/* Cards */
-.bg-gray-800 {
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.1);
-}
 .bg-gray-800:hover {
     transform: scale(1.05);
-    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.2);
 }
 
-/* Buttons */
+/* 🎨 Buttons */
 button {
     cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 10px 15px;
     font-weight: bold;
-    border-radius: 5px;
-    background: linear-gradient(90deg, #f59e0b, #eab308);
-    color: white;
     border: none;
-}
-button:hover {
-    transform: scale(1.1);
-    background: linear-gradient(90deg, #eab308, #d97706);
-    box-shadow: 0px 5px 10px rgba(255, 255, 255, 0.2);
+    padding: 12px 20px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
 }
 
-/* Profile Editing Modal */
+button:hover {
+    opacity: 0.9;
+}
+
+.bg-blue-500 {
+    background: linear-gradient(45deg, #3b82f6, #1e40af);
+    color: white;
+}
+
+.bg-blue-500:hover {
+    background: linear-gradient(45deg, #2563eb, #1e3a8a);
+}
+
+/* 📄 Profile Section */
+#profile {
+    padding: 100px 20px;
+}
+
+#profile img {
+    border: 5px solid white;
+    transition: transform 0.3s ease-in-out;
+}
+
+#profile img:hover {
+    transform: scale(1.1);
+}
+
+/* 🔥 Modal Styling */
 .modal {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #1f2937;
-    padding: 25px;
-    border-radius: 10px;
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 12px;
     box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.2);
-    z-index: 200;
-    width: 90%;
-    max-width: 400px;
-    text-align: center;
-    animation: zoomIn 0.5s ease-in-out forwards;
+    z-index: 2000;
 }
+
 .hidden {
     display: none;
 }
 
-/* Zoom-in animation for modal */
-@keyframes zoomIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
+/* 📱 Responsive Styles */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        text-align: center;
     }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* Modal Input Fields */
-.modal input {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border-radius: 5px;
-    border: none;
-    background: #333;
-    color: white;
-    transition: all 0.3s ease-in-out;
-}
-.modal input:focus {
-    background: #444;
-    box-shadow: 0px 0px 8px rgba(255, 255, 255, 0.3);
-}
-
-/* Live Update Animation */
-#live-updates li {
-    animation: popIn 0.8s ease-in-out forwards;
-}
-@keyframes popIn {
-    from {
-        opacity: 0;
-        transform: scale(0.5);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
+    
+    .modal {
+        width: 90%;
     }
 }
