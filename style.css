@@ -5,42 +5,54 @@ body {
     color: white;
     margin: 0;
     padding: 0;
+    scroll-behavior: smooth;
 }
 
 /* Navbar */
 nav {
-    background-color: #1f2937;
-    padding: 10px;
+    background: linear-gradient(90deg, #1e3a8a, #2563eb);
+    padding: 12px;
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 100;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
 }
 nav ul {
     list-style: none;
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 20px;
 }
 nav ul li a {
     color: white;
     text-decoration: none;
-    padding: 8px 12px;
-    transition: color 0.3s ease;
+    padding: 10px 15px;
+    transition: all 0.3s ease-in-out;
+    border-radius: 5px;
 }
 nav ul li a:hover {
-    color: #60a5fa;
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffcc00;
 }
 
-/* Sections */
+/* Sections with Different Colors */
+section:nth-child(odd) {
+    background: linear-gradient(90deg, #1e40af, #1e3a8a);
+}
+section:nth-child(even) {
+    background: linear-gradient(90deg, #047857, #059669);
+}
 section {
-    padding: 60px 20px;
+    padding: 80px 20px;
     text-align: center;
     margin-top: 60px;
+    color: white;
+    transition: background 0.5s ease-in-out;
 }
 h2 {
-    font-size: 2rem;
-    margin-bottom: 15px;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
 }
 
 /* Animations */
@@ -56,36 +68,108 @@ h2 {
     }
 }
 
+.slide-in {
+    opacity: 0;
+    transform: translateX(-50px);
+    animation: slideIn 1s ease-in-out forwards;
+}
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
 /* Cards */
 .bg-gray-800 {
-    transition: transform 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
 }
 .bg-gray-800:hover {
     transform: scale(1.05);
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
 }
 
 /* Buttons */
 button {
     cursor: pointer;
     transition: all 0.3s ease;
+    padding: 10px 15px;
+    font-weight: bold;
+    border-radius: 5px;
+    background: linear-gradient(90deg, #f59e0b, #eab308);
+    color: white;
+    border: none;
 }
 button:hover {
-    opacity: 0.9;
+    transform: scale(1.1);
+    background: linear-gradient(90deg, #eab308, #d97706);
+    box-shadow: 0px 5px 10px rgba(255, 255, 255, 0.2);
 }
 
 /* Profile Editing Modal */
 .modal {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: #1f2937;
-    padding: 20px;
+    padding: 25px;
     border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+    box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.2);
     z-index: 200;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    animation: zoomIn 0.5s ease-in-out forwards;
 }
 .hidden {
     display: none;
+}
+
+/* Zoom-in animation for modal */
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Modal Input Fields */
+.modal input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 5px;
+    border: none;
+    background: #333;
+    color: white;
+    transition: all 0.3s ease-in-out;
+}
+.modal input:focus {
+    background: #444;
+    box-shadow: 0px 0px 8px rgba(255, 255, 255, 0.3);
+}
+
+/* Live Update Animation */
+#live-updates li {
+    animation: popIn 0.8s ease-in-out forwards;
+}
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
