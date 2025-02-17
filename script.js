@@ -1,10 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("✅ DOM Fully Loaded!");
+
     // 🌍 Smooth Scrolling for Navbar
     document.querySelectorAll("nav a").forEach(anchor => {
         anchor.addEventListener("click", event => {
             event.preventDefault();
             const sectionId = anchor.getAttribute("href").substring(1);
-            document.getElementById(sectionId).scrollIntoView({ behavior: "smooth" });
+            document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
         });
     });
 
@@ -14,27 +16,32 @@ document.addEventListener("DOMContentLoaded", () => {
         "Final Round Commences - 2:00 PM",
         "Winners Announced - 4:00 PM"
     ];
-    let index = 0;
-    setInterval(() => {
-        if (index < updates.length) {
-            const newUpdate = document.createElement("li");
-            newUpdate.className = "bg-gray-700 p-3 rounded fade-in";
-            newUpdate.textContent = updates[index++];
-            document.getElementById("live-updates").appendChild(newUpdate);
-        }
-    }, 5000);
+    let updateIndex = 0;
+    const updateContainer = document.getElementById("live-updates");
 
-    // 🏆 Leaderboard Updates (with animation)
+    if (updateContainer) {
+        setInterval(() => {
+            if (updateIndex < updates.length) {
+                const newUpdate = document.createElement("li");
+                newUpdate.className = "bg-gray-700 p-3 rounded fade-in";
+                newUpdate.textContent = updates[updateIndex++];
+                updateContainer.appendChild(newUpdate);
+            }
+        }, 5000);
+    }
+
+    // 🏆 Leaderboard Updates (Smooth Score Increase)
     setInterval(() => {
-        document.querySelectorAll("#leaderboard-data tr td:last-child").forEach(score => {
-            let newScore = Math.floor(Math.random() * 100) + 1;
-            score.textContent = newScore;
-            score.classList.add("score-update");
-            setTimeout(() => score.classList.remove("score-update"), 500);
+        document.querySelectorAll("#leaderboard-data tr td:last-child").forEach(scoreCell => {
+            let currentScore = parseInt(scoreCell.textContent) || 0;
+            let newScore = currentScore + Math.floor(Math.random() * 10); // Incrementing instead of randomizing
+            scoreCell.textContent = newScore;
+            scoreCell.classList.add("score-update");
+            setTimeout(() => scoreCell.classList.remove("score-update"), 500);
         });
     }, 5000);
 
-    // 🎉 Fixing Event Creation System
+    // 🎉 Event Creation System
     document.querySelector("#event-form")?.addEventListener("submit", function (event) {
         event.preventDefault();
         const eventName = document.querySelector("#event-name").value.trim();
@@ -58,43 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("✅ New event has been created successfully!");
         this.reset();
     });
-
-   document.addEventListener("DOMContentLoaded", () => {
-    const editProfileBtn = document.getElementById("edit-profile-btn");
-    const editProfileModal = document.getElementById("edit-profile-modal");
-    const closeModal = document.getElementById("close-modal");
-    const saveProfileBtn = document.getElementById("save-profile-btn");
-
-    // Open modal
-    editProfileBtn.addEventListener("click", () => {
-        editProfileModal.classList.remove("hidden");
-        
-        // Pre-fill input fields with current profile data
-        document.getElementById("edit-name").value = document.getElementById("profile-name").textContent;
-        document.getElementById("edit-username").value = document.getElementById("profile-username").textContent;
-        document.getElementById("edit-email").value = document.getElementById("profile-email").textContent;
-        document.getElementById("edit-participation").value = document.getElementById("profile-participation").textContent;
-        document.getElementById("edit-wins").value = document.getElementById("profile-wins").textContent;
-    });
-
-    // Close modal
-    closeModal.addEventListener("click", () => {
-        editProfileModal.classList.add("hidden");
-    });
-
-    // Save changes
-    saveProfileBtn.addEventListener("click", () => {
-        document.getElementById("profile-name").textContent = document.getElementById("edit-name").value;
-        document.getElementById("profile-username").textContent = document.getElementById("edit-username").value;
-        document.getElementById("profile-email").textContent = document.getElementById("edit-email").value;
-        document.getElementById("profile-participation").textContent = document.getElementById("edit-participation").value;
-        document.getElementById("profile-wins").textContent = document.getElementById("edit-wins").value;
-
-        alert("✅ Profile Updated Successfully!");
-        editProfileModal.classList.add("hidden");
-    });
-});
-
 
     // 📝 Blog Post Creation System
     document.querySelector("#blog-form")?.addEventListener("submit", function (event) {
@@ -136,4 +106,40 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => row.querySelector(".total-score").classList.remove("score-update"), 500);
         });
     });
+
+    // 📝 Profile Editing Feature
+    const editProfileBtn = document.getElementById("edit-profile-btn");
+    const editProfileModal = document.getElementById("edit-profile-modal");
+    const closeModal = document.getElementById("close-modal");
+    const saveProfileBtn = document.getElementById("save-profile-btn");
+
+    if (editProfileBtn && editProfileModal && closeModal && saveProfileBtn) {
+        editProfileBtn.addEventListener("click", () => {
+            editProfileModal.classList.remove("hidden");
+            
+            // Pre-fill input fields with current profile data
+            document.getElementById("edit-name").value = document.getElementById("profile-name").textContent;
+            document.getElementById("edit-username").value = document.getElementById("profile-username").textContent;
+            document.getElementById("edit-email").value = document.getElementById("profile-email").textContent;
+            document.getElementById("edit-participation").value = document.getElementById("profile-participation").textContent;
+            document.getElementById("edit-wins").value = document.getElementById("profile-wins").textContent;
+        });
+
+        // Close modal
+        closeModal.addEventListener("click", () => {
+            editProfileModal.classList.add("hidden");
+        });
+
+        // Save changes
+        saveProfileBtn.addEventListener("click", () => {
+            document.getElementById("profile-name").textContent = document.getElementById("edit-name").value;
+            document.getElementById("profile-username").textContent = document.getElementById("edit-username").value;
+            document.getElementById("profile-email").textContent = document.getElementById("edit-email").value;
+            document.getElementById("profile-participation").textContent = document.getElementById("edit-participation").value;
+            document.getElementById("profile-wins").textContent = document.getElementById("edit-wins").value;
+
+            alert("✅ Profile Updated Successfully!");
+            editProfileModal.classList.add("hidden");
+        });
+    }
 });
