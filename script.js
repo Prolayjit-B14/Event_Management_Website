@@ -34,20 +34,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }, 5000);
 
-    // 🎉 Handling Event Creation
-    document.querySelector("#event-form").addEventListener("submit", function (event) {
+    // 🎉 Fixing Event Creation System
+    document.querySelector("#event-form")?.addEventListener("submit", function (event) {
         event.preventDefault();
         const eventName = document.querySelector("#event-name").value.trim();
         const eventDate = document.querySelector("#event-date").value;
         const eventDesc = document.querySelector("#event-desc").value.trim();
+        const eventList = document.getElementById("event-list");
 
-        if (eventName === "" || eventDate === "" || eventDesc === "") {
+        if (!eventName || !eventDate || !eventDesc) {
             alert("⚠️ Please fill out all fields!");
             return;
         }
 
-        // Display event dynamically
-        const eventList = document.getElementById("event-list");
         const newEvent = document.createElement("div");
         newEvent.className = "bg-gray-800 p-4 rounded-lg shadow-lg mt-4 fade-in";
         newEvent.innerHTML = `
@@ -56,18 +55,40 @@ document.addEventListener("DOMContentLoaded", () => {
             <p class="mt-2">${eventDesc}</p>
         `;
         eventList.appendChild(newEvent);
-
         alert("✅ New event has been created successfully!");
         this.reset();
     });
 
-    // 👤 Profile Editing
-    document.querySelector("#edit-profile-btn").addEventListener("click", () => {
+    // 👤 Fixing Profile Editing Modal
+    document.querySelector("#edit-profile-btn")?.addEventListener("click", () => {
         document.querySelector("#edit-profile-modal").classList.remove("hidden");
     });
 
-    document.querySelector("#close-modal").addEventListener("click", () => {
+    document.querySelector("#close-modal")?.addEventListener("click", () => {
         document.querySelector("#edit-profile-modal").classList.add("hidden");
+    });
+
+    // 📝 Blog Post Creation System
+    document.querySelector("#blog-form")?.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const blogTitle = document.querySelector("#blog-title").value.trim();
+        const blogContent = document.querySelector("#blog-content").value.trim();
+        const blogList = document.getElementById("blog-list");
+
+        if (!blogTitle || !blogContent) {
+            alert("⚠️ Please fill out all fields!");
+            return;
+        }
+
+        const newBlog = document.createElement("div");
+        newBlog.className = "bg-gray-800 p-4 rounded-lg shadow-lg mt-4 fade-in";
+        newBlog.innerHTML = `
+            <h3 class="text-xl font-bold text-yellow-400">${blogTitle}</h3>
+            <p class="mt-2 text-gray-300">${blogContent}</p>
+        `;
+        blogList.appendChild(newBlog);
+        alert("✅ New blog post has been created successfully!");
+        this.reset();
     });
 
     // 🏅 Judging System Calculation
