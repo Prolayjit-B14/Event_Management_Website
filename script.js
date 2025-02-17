@@ -1,6 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("✅ DOM Fully Loaded!");
 
+    // 📝 Post Message Function (inside DOMContentLoaded listener)
+    function postMessage() {
+        const textArea = document.querySelector('#userMessage'); // Get the text area
+        const message = textArea.value.trim(); // Get the trimmed message value
+
+        if (message) {
+            alert('Message Posted: ' + message);  // You can replace this with actual posting functionality
+            textArea.value = '';  // Clear the text area after posting
+        } else {
+            alert('Please write something before posting!');  // Handle empty input
+        }
+    }
+
     // 🌍 Smooth Scrolling for Navbar
     document.querySelectorAll("nav a").forEach(anchor => {
         anchor.addEventListener("click", event => {
@@ -56,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const newEvent = document.createElement("div");
         newEvent.className = "bg-gray-800 p-4 rounded-lg shadow-lg mt-4 fade-in";
-        newEvent.innerHTML = `
+        newEvent.innerHTML = ` 
             <h3 class="text-xl font-bold text-yellow-400">${eventName}</h3>
             <p class="text-gray-300">${eventDate}</p>
             <p class="mt-2">${eventDesc}</p>
@@ -137,22 +150,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    <script>
-  // Function to handle the posting action
-  function postMessage() {
-    const textArea = document.querySelector('#userMessage'); // Get the text area
-    const message = textArea.value.trim(); // Get the trimmed message value
-
-    if (message) {
-      alert('Message Posted: ' + message);  // You can replace this with actual posting functionality
-      textArea.value = '';  // Clear the text area after posting
-    } else {
-      alert('Please write something before posting!');  // Handle empty input
-    }
-  }
-</script>
-
-    
     // 📝 Profile Editing Feature
     const editProfileBtn = document.getElementById("edit-profile-btn");
     const editProfileModal = document.getElementById("edit-profile-modal");
