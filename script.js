@@ -59,14 +59,42 @@ document.addEventListener("DOMContentLoaded", () => {
         this.reset();
     });
 
-    // 👤 Fixing Profile Editing Modal
-    document.querySelector("#edit-profile-btn")?.addEventListener("click", () => {
-        document.querySelector("#edit-profile-modal").classList.remove("hidden");
+   document.addEventListener("DOMContentLoaded", () => {
+    const editProfileBtn = document.getElementById("edit-profile-btn");
+    const editProfileModal = document.getElementById("edit-profile-modal");
+    const closeModal = document.getElementById("close-modal");
+    const saveProfileBtn = document.getElementById("save-profile-btn");
+
+    // Open modal
+    editProfileBtn.addEventListener("click", () => {
+        editProfileModal.classList.remove("hidden");
+        
+        // Pre-fill input fields with current profile data
+        document.getElementById("edit-name").value = document.getElementById("profile-name").textContent;
+        document.getElementById("edit-username").value = document.getElementById("profile-username").textContent;
+        document.getElementById("edit-email").value = document.getElementById("profile-email").textContent;
+        document.getElementById("edit-participation").value = document.getElementById("profile-participation").textContent;
+        document.getElementById("edit-wins").value = document.getElementById("profile-wins").textContent;
     });
 
-    document.querySelector("#close-modal")?.addEventListener("click", () => {
-        document.querySelector("#edit-profile-modal").classList.add("hidden");
+    // Close modal
+    closeModal.addEventListener("click", () => {
+        editProfileModal.classList.add("hidden");
     });
+
+    // Save changes
+    saveProfileBtn.addEventListener("click", () => {
+        document.getElementById("profile-name").textContent = document.getElementById("edit-name").value;
+        document.getElementById("profile-username").textContent = document.getElementById("edit-username").value;
+        document.getElementById("profile-email").textContent = document.getElementById("edit-email").value;
+        document.getElementById("profile-participation").textContent = document.getElementById("edit-participation").value;
+        document.getElementById("profile-wins").textContent = document.getElementById("edit-wins").value;
+
+        alert("✅ Profile Updated Successfully!");
+        editProfileModal.classList.add("hidden");
+    });
+});
+
 
     // 📝 Blog Post Creation System
     document.querySelector("#blog-form")?.addEventListener("submit", function (event) {
