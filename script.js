@@ -89,6 +89,36 @@ document.addEventListener("DOMContentLoaded", () => {
         this.reset();
     });
 
+    // 🗨️ Forum Post Creation
+    document.addEventListener("DOMContentLoaded", () => {
+        const forumForm = document.getElementById("forum-form");
+        const forumInput = document.getElementById("forum-input");
+        const forumList = document.getElementById("forum-list");
+
+        forumForm.addEventListener("submit", (event) => {
+            event.preventDefault(); // Prevents page refresh
+
+            const postText = forumInput.value.trim();
+            if (postText === "") {
+                alert("⚠️ Please enter a discussion topic before posting!");
+                return;
+            }
+
+        // Create a new forum post element
+        const newPost = document.createElement("li");
+        newPost.className = "bg-gray-700 p-4 rounded-lg fade-in";
+        newPost.innerHTML = `${postText} - <span class="text-gray-400">by Anonymous</span>`;
+
+        // Append post to the forum list
+        forumList.prepend(newPost);
+
+        // Clear input field
+        forumInput.value = "";
+
+        alert("✅ Your discussion has been posted!");
+    });
+});
+
     // 🏅 Judging System Calculation
     document.querySelectorAll(".submit-score").forEach(button => {
         button.addEventListener("click", function () {
