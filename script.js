@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(() => {
         document.querySelectorAll("#leaderboard-data tr td:last-child").forEach(scoreCell => {
             let currentScore = parseInt(scoreCell.textContent) || 0;
-            let newScore = currentScore + Math.floor(Math.random() * 10); // Incrementing instead of randomizing
+            let newScore = currentScore + Math.floor(Math.random() * 10);
             scoreCell.textContent = newScore;
             scoreCell.classList.add("score-update");
             setTimeout(() => scoreCell.classList.remove("score-update"), 500);
@@ -89,37 +89,36 @@ document.addEventListener("DOMContentLoaded", () => {
         this.reset();
     });
 
-    // 🗨️ Forum Post Creation
-document.addEventListener("DOMContentLoaded", () => {
+    // 🗨️ Forum Post Creation (Fixed Placement)
     const forumForm = document.getElementById("forum-form");
     const forumInput = document.getElementById("forum-input");
     const forumList = document.getElementById("forum-list");
 
-    forumForm.addEventListener("submit", (event) => {
-        event.preventDefault(); // Prevents page refresh
+    if (forumForm) {
+        forumForm.addEventListener("submit", (event) => {
+            event.preventDefault();
 
-        const postText = forumInput.value.trim();
-        if (postText === "") {
-            alert("⚠️ Please enter a discussion topic before posting!");
-            return;
-        }
+            const postText = forumInput.value.trim();
+            if (postText === "") {
+                alert("⚠️ Please enter a discussion topic before posting!");
+                return;
+            }
 
-        // Create a new forum post element
-        const newPost = document.createElement("li");
-        newPost.className = "bg-gray-700 p-4 rounded-lg fade-in";
-        newPost.innerHTML = `${postText} - <span class="text-gray-400">by Anonymous</span>`;
+            // Create a new forum post element
+            const newPost = document.createElement("li");
+            newPost.className = "bg-gray-700 p-4 rounded-lg fade-in";
+            newPost.innerHTML = `${postText} - <span class="text-gray-400">by Anonymous</span>`;
 
-        // Append post to the forum list
-        forumList.prepend(newPost);
+            // Append post to the forum list
+            forumList.prepend(newPost);
 
-        // Clear input field
-        forumInput.value = "";
+            // Clear input field
+            forumInput.value = "";
 
-        alert("✅ Your discussion has been posted!");
-    });
-});
+            alert("✅ Your discussion has been posted!");
+        });
+    }
 
-    
     // 🏅 Judging System Calculation
     document.querySelectorAll(".submit-score").forEach(button => {
         button.addEventListener("click", function () {
@@ -147,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (editProfileBtn && editProfileModal && closeModal && saveProfileBtn) {
         editProfileBtn.addEventListener("click", () => {
             editProfileModal.classList.remove("hidden");
-            
+
             // Pre-fill input fields with current profile data
             document.getElementById("edit-name").value = document.getElementById("profile-name").textContent;
             document.getElementById("edit-username").value = document.getElementById("profile-username").textContent;
