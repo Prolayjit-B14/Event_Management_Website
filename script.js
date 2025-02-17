@@ -12,7 +12,15 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             alert('Please write something before posting!');  // Handle empty input
         }
-    
+    }
+
+    // 📝 Event registration button click handler
+    const registerButtons = document.querySelectorAll('.bg-yellow-500');
+    registerButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            alert('Thank you for registering!'); // Replace this with actual registration logic
+        });
+    });
 
     // 🌍 Smooth Scrolling for Navbar
     document.querySelectorAll("nav a").forEach(anchor => {
