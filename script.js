@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             alert('Please write something before posting!');  // Handle empty input
         }
-    }
+    
 
     // 🌍 Smooth Scrolling for Navbar
     document.querySelectorAll("nav a").forEach(anchor => {
