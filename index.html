@@ -395,14 +395,16 @@
 <section id="forum" class="p-8 text-center fade-in">
     <h2 class="text-3xl font-bold">Community Forum</h2>
     <p class="text-gray-400 mt-2">Join discussions, ask questions, and share ideas.</p>
+
     <div class="mt-6 bg-gray-800 p-6 rounded-lg shadow-lg">
-        <div class="mb-4">
-            <input type="text" placeholder="Start a discussion..." class="w-full p-2 rounded-lg text-black">
-            <button class="mt-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Post</button>
-        </div>
+        <form id="forum-form">
+            <input type="text" id="forum-input" placeholder="Start a discussion..." class="w-full p-2 rounded-lg text-black">
+            <button type="submit" class="mt-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Post</button>
+        </form>
+
         <div class="text-left">
             <h3 class="text-xl font-semibold">Recent Discussions</h3>
-            <ul class="mt-4 space-y-4">
+            <ul id="forum-list" class="mt-4 space-y-4">
                 <li class="bg-gray-700 p-4 rounded-lg">How to improve coding speed? - <span class="text-gray-400">by Snehasish Nag</span></li>
                 <li class="bg-gray-700 p-4 rounded-lg">Best resources for Data Structures - <span class="text-gray-400">by Debopam Sarkar</span></li>
                 <li class="bg-gray-700 p-4 rounded-lg">Tips for first hackathon - <span class="text-gray-400">by Prolayjit Biswas</span></li>
@@ -410,6 +412,7 @@
         </div>
     </div>
 </section>
+
 
 <section id="socials" class="p-8 text-center fade-in">
         <h2 class="text-3xl font-bold text-center">Stay Connected</h2>
