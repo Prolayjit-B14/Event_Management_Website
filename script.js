@@ -137,6 +137,22 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    <script>
+  // Function to handle the posting action
+  function postMessage() {
+    const textArea = document.querySelector('#userMessage'); // Get the text area
+    const message = textArea.value.trim(); // Get the trimmed message value
+
+    if (message) {
+      alert('Message Posted: ' + message);  // You can replace this with actual posting functionality
+      textArea.value = '';  // Clear the text area after posting
+    } else {
+      alert('Please write something before posting!');  // Handle empty input
+    }
+  }
+</script>
+
+    
     // 📝 Profile Editing Feature
     const editProfileBtn = document.getElementById("edit-profile-btn");
     const editProfileModal = document.getElementById("edit-profile-modal");
