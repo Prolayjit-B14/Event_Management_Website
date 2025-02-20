@@ -158,6 +158,33 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Function to add a review dynamically
+function addReview() {
+    let name = document.getElementById("reviewer-name").value.trim();
+    let reviewText = document.getElementById("review-text").value.trim();
+    let rating = document.getElementById("review-rating").value;
+
+    if (name === "" || reviewText === "") {
+        alert("⚠️ Please fill in all fields before submitting!");
+        return;
+    }
+
+    let newReview = document.createElement("div");
+    newReview.className = "bg-gray-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-yellow-400/50 mt-4";
+
+    newReview.innerHTML = `
+        <h3 class="text-xl font-semibold">${name}</h3>
+        <p class="text-yellow-400">${rating}</p>
+        <p class="mt-2 text-gray-300">"${reviewText}"</p>
+    `;
+
+    document.getElementById("reviews-container").appendChild(newReview);
+
+    document.getElementById("reviewer-name").value = "";
+    document.getElementById("review-text").value = "";
+    document.getElementById("review-rating").value = "⭐⭐⭐⭐⭐";
+}
+
 
     // Function to add a review dynamically
 function addReview() {
