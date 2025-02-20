@@ -56,19 +56,29 @@
     <h2 class="text-3xl font-bold">User Profile</h2>
     <p class="text-gray-400 mt-2">View and update your profile information</p>
     
-    <div class="mt-6 bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg mx-auto">
-        <img src=""C:\Users\PROLAYJIT BISWAS\Pictures\ar.jpg"" alt="Profile Picture" class="rounded-full w-32 mx-auto">
-        <h3 id="profile-name" class="text-xl font-bold mt-4">Arghya Roy</h3>
-        <p id="profile-username" class="text-gray-400">Bubun-M</p>
-        <p class="mt-2">Participation: <span id="profile-participation">5</span> Events | Wins: <span id="profile-wins">2</span></p>
-        <div class="mt-4 text-left">
-            <p><strong>Email:</strong> <span id="profile-email">royarghya@gmail.com</span></p>
-            <p><strong>Role:</strong> <span id="profile-role">Participant</span></p>
-            <p><strong>Joined:</strong> <span id="profile-joined">January 2025</span></p>
-        </div>
-        <button id="edit-profile-btn" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Edit Profile</button>
+<div class="mt-6 bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg mx-auto text-center">
+    <img src="assets/ar.jpg" alt="Profile Picture of Arghya Roy" class="rounded-full w-32 mx-auto border-4 border-gray-700">
+    
+    <h3 id="profile-name" class="text-xl font-bold mt-4 text-white">Arghya Roy</h3>
+    <p id="profile-username" class="text-gray-400">@Bubun-M</p>
+    
+    <p class="mt-2 text-gray-300">
+        Participation: <span id="profile-participation" class="font-semibold text-blue-400">5</span> Events | 
+        Wins: <span id="profile-wins" class="font-semibold text-green-400">2</span>
+    </p>
+    
+    <div class="mt-4 text-left text-gray-300">
+        <p><strong>Email:</strong> <span id="profile-email">royarghya@gmail.com</span></p>
+        <p><strong>Role:</strong> <span id="profile-role">Participant</span></p>
+        <p><strong>Joined:</strong> <span id="profile-joined">January 2025</span></p>
     </div>
-</section>
+    
+    <button id="edit-profile-btn" 
+        class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg transition duration-300">
+        Edit Profile
+    </button>
+</div>
+
 
 <!-- Profile Edit Modal -->
 <div id="edit-profile-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
