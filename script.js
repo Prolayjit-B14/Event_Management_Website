@@ -158,6 +158,40 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+
+    // Function to add a review dynamically
+function addReview() {
+    // Get input values
+    let name = document.getElementById("reviewer-name").value.trim();
+    let reviewText = document.getElementById("review-text").value.trim();
+    let rating = document.getElementById("review-rating").value;
+
+    // Validate input fields
+    if (name === "" || reviewText === "") {
+        alert("Please fill in all fields before submitting!");
+        return;
+    }
+
+    // Create new review HTML structure
+    let newReview = document.createElement("div");
+    newReview.className = "bg-gray-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-yellow-400/50 mt-4";
+
+    newReview.innerHTML = `
+        <h3 class="text-xl font-semibold">${name}</h3>
+        <p class="text-yellow-400">${rating}</p>
+        <p class="mt-2 text-gray-300">"${reviewText}"</p>
+    `;
+
+    // Append new review to the existing reviews section
+    document.getElementById("reviews-container").appendChild(newReview);
+
+    // Clear input fields after submission
+    document.getElementById("reviewer-name").value = "";
+    document.getElementById("review-text").value = "";
+    document.getElementById("review-rating").value = "⭐⭐⭐⭐⭐";
+}
+
+    
     // 📝 Profile Editing Feature
     const editProfileBtn = document.getElementById("edit-profile-btn");
     const editProfileModal = document.getElementById("edit-profile-modal");
