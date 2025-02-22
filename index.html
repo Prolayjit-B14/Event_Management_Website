@@ -380,58 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
     </script>
     </section>
 
-<section id="events" class="mt-16 p-8 text-center">
-    <h2 class="text-3xl font-bold text-white">Upcoming Events</h2>
-    <div id="event-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        <!-- Events will be dynamically inserted here -->
-    </div>
-</section>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const events = [
-            {
-                title: "Hackentine 2025",
-                date: "February 14, 2025",
-                description: "A Valentine's Day special hackathon for coders.",
-                image: "https://source.unsplash.com/300x200/?coding,tech",
-                id: "hackentine-2025"
-            },
-            {
-                title: "Hackathon 2025",
-                date: "March 20, 2025",
-                description: "Compete in this intense 24-hour hackathon!",
-                image: "https://source.unsplash.com/300x200/?hacker,hackathon",
-                id: "hackathon-2025"
-            },
-            {
-                title: "Code Challenge",
-                date: "April 15, 2025",
-                description: "Test your DSA skills in this coding contest.",
-                image: "https://source.unsplash.com/300x200/?programming,computer",
-                id: "code-challenge-2025"
-            }
-        ];
-
-        const eventList = document.getElementById("event-list");
-
-        events.forEach(event => {
-            const eventCard = document.createElement("div");
-            eventCard.className =
-                "bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer";
-
-            eventCard.innerHTML = `
-                <img src="${event.image}" alt="${event.title}" class="w-full h-40 object-cover rounded-lg">
-                <h3 class="text-xl font-semibold text-white mt-4">${event.title}</h3>
-                <p class="text-gray-400">${event.date}</p>
-                <a href="event-details.html?id=${event.id}" class="mt-4 px-6 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold block text-center">
-                    More Info
-                </a>
-            `;
-            eventList.appendChild(eventCard);
-        });
-    });
-</script>
 
 
 <section class="p-8 text-center">
