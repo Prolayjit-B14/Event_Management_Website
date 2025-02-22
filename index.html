@@ -569,48 +569,85 @@ document.getElementById("event-form").addEventListener("submit", function(event)
 
     <div class="mt-6 bg-gray-800 p-6 rounded-lg">
         <form id="forum-form">
-            <input type="text" id="forum-input" placeholder="Start a discussion..." class="w-full p-2 rounded-lg text-black" required>
-            <button type="submit" class="mt-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Post</button>
+            <input type="text" id="forum-input" placeholder="Start a discussion..." 
+                class="w-full p-2 rounded-lg text-black" required maxlength="200">
+            <button type="submit" class="mt-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">
+                Post
+            </button>
         </form>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="hidden fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg">
+            Discussion posted!
+        </div>
 
         <div class="text-left mt-6">
             <h3 class="text-xl font-semibold">Recent Discussions</h3>
             <ul id="forum-list" class="mt-4 space-y-4">
-                <li class="bg-gray-700 p-4 rounded-lg">How to improve coding speed? - <span class="text-gray-400">by Snehasish Nag</span></li>
-                <li class="bg-gray-700 p-4 rounded-lg">Best resources for Data Structures - <span class="text-gray-400">by Debopam Sarkar</span></li>
-                <li class="bg-gray-700 p-4 rounded-lg">Tips for first hackathon - <span class="text-gray-400">by Prolayjit Biswas</span></li>
+                <!-- Existing posts -->
             </ul>
         </div>
     </div>
 </section>
 
 <script>
-document.getElementById("forum-form").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent page reload
+document.addEventListener("DOMContentLoaded", function() {
+    loadDiscussions(); // Load stored discussions
+});
 
-    // Get input value
+document.getElementById("forum-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+
     let discussionText = document.getElementById("forum-input").value.trim();
-    
     if (discussionText === "") {
         alert("Please enter a discussion topic!");
         return;
     }
 
-    // Create new list item
+    let userName = "Anonymous"; // Replace with dynamic user authentication if available
+    let discussionHTML = `${discussionText} - <span class="text-gray-400">by ${userName}</span>`;
+
     let newDiscussion = document.createElement("li");
     newDiscussion.classList.add("bg-gray-700", "p-4", "rounded-lg", "fade-in");
-    newDiscussion.innerHTML = `${discussionText} - <span class="text-gray-400">by Anonymous</span>`;
+    newDiscussion.innerHTML = discussionHTML;
 
-    // Append to discussion list
     document.getElementById("forum-list").prepend(newDiscussion);
+
+    // Save discussion to local storage
+    saveDiscussion(discussionHTML);
 
     // Clear input field
     document.getElementById("forum-input").value = "";
 
-    // Show success message
-    alert("Your discussion has been posted!");
+    // Show success toast
+    showToast("Discussion posted!");
 });
+
+function saveDiscussion(discussion) {
+    let discussions = JSON.parse(localStorage.getItem("forumDiscussions")) || [];
+    discussions.unshift(discussion);
+    localStorage.setItem("forumDiscussions", JSON.stringify(discussions));
+}
+
+function loadDiscussions() {
+    let discussions = JSON.parse(localStorage.getItem("forumDiscussions")) || [];
+    let forumList = document.getElementById("forum-list");
+    discussions.forEach(discussion => {
+        let newDiscussion = document.createElement("li");
+        newDiscussion.classList.add("bg-gray-700", "p-4", "rounded-lg");
+        newDiscussion.innerHTML = discussion;
+        forumList.appendChild(newDiscussion);
+    });
+}
+
+function showToast(message) {
+    let toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.classList.remove("hidden");
+    setTimeout(() => toast.classList.add("hidden"), 3000);
+}
 </script>
+
 
     
 <section id="socials" class="p-8 text-center fade-in">
