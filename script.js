@@ -214,6 +214,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Function to restrict access to unauthorized users
+    function checkAuth() {
+        const token = sessionStorage.getItem("token") || localStorage.getItem("token");
+
+        if (!token) {
+            window.location.href = "index.html"; // Redirect to login page
+        }
+    }
+
+// Call this function at the top of every protected page
+checkAuth();
+
+    
     // 🏅 Judging System Calculation
     document.querySelectorAll(".submit-score").forEach(button => {
         button.addEventListener("click", function () {
