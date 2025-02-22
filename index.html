@@ -68,7 +68,8 @@
     </div>
 </section>
 
-<section id="profile" class="p-10 pt-20 text-center fade-in transition-opacity duration-500">
+    <!-- Profile  -->
+    <section id="profile" class="p-10 pt-20 text-center fade-in transition-opacity duration-500">
     <h2 class="text-3xl font-bold">User Profile</h2>
     <p class="text-gray-400 mt-2">View and update your profile information</p>
 
@@ -113,6 +114,11 @@
         </div>
     </div>
 
+    <!-- Success Message -->
+    <div id="success-msg" class="hidden fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity duration-500">
+    Profile updated successfully!
+    </div>
+    
     <!-- Profile Picture Upload Form -->
     <form id="profile-pic-form" enctype="multipart/form-data" class="mt-4">
         <input type="file" id="profile-pic-input" accept="image/*" class="hidden">
