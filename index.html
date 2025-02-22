@@ -474,13 +474,13 @@ document.getElementById("event-form").addEventListener("submit", function(event)
     <h2 class="text-3xl font-bold">Community Forum</h2>
     <p class="text-gray-400 mt-2">Join discussions, ask questions, and share ideas.</p>
 
-    <div class="mt-6 bg-gray-800 p-6 rounded-lg ">
+    <div class="mt-6 bg-gray-800 p-6 rounded-lg">
         <form id="forum-form">
-            <input type="text" id="forum-input" placeholder="Start a discussion..." class="w-full p-2 rounded-lg text-black">
+            <input type="text" id="forum-input" placeholder="Start a discussion..." class="w-full p-2 rounded-lg text-black" required>
             <button type="submit" class="mt-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Post</button>
         </form>
 
-        <div class="text-left">
+        <div class="text-left mt-6">
             <h3 class="text-xl font-semibold">Recent Discussions</h3>
             <ul id="forum-list" class="mt-4 space-y-4">
                 <li class="bg-gray-700 p-4 rounded-lg">How to improve coding speed? - <span class="text-gray-400">by Snehasish Nag</span></li>
@@ -490,6 +490,35 @@ document.getElementById("event-form").addEventListener("submit", function(event)
         </div>
     </div>
 </section>
+
+<script>
+document.getElementById("forum-form").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent page reload
+
+    // Get input value
+    let discussionText = document.getElementById("forum-input").value.trim();
+    
+    if (discussionText === "") {
+        alert("Please enter a discussion topic!");
+        return;
+    }
+
+    // Create new list item
+    let newDiscussion = document.createElement("li");
+    newDiscussion.classList.add("bg-gray-700", "p-4", "rounded-lg", "fade-in");
+    newDiscussion.innerHTML = `${discussionText} - <span class="text-gray-400">by Anonymous</span>`;
+
+    // Append to discussion list
+    document.getElementById("forum-list").prepend(newDiscussion);
+
+    // Clear input field
+    document.getElementById("forum-input").value = "";
+
+    // Show success message
+    alert("Your discussion has been posted!");
+});
+</script>
+
     
 <section id="socials" class="p-8 text-center fade-in">
     <h2 class="text-3xl font-bold text-center">Stay Connected</h2>
