@@ -94,7 +94,16 @@
     </div>
 </div>
 
-    
+<!-- Profile Picture Upload Form -->
+<form id="profile-pic-form" enctype="multipart/form-data" class="mt-4">
+    <input type="file" id="profile-pic-input" accept="image/*" class="hidden">
+    <label for="profile-pic-input" class="cursor-pointer bg-blue-500 text-white px-3 py-2 rounded-lg">
+        Change Profile Picture
+    </label>
+    <button type="submit" class="bg-green-500 text-white px-3 py-2 rounded-lg ml-2">Upload</button>
+</form>
+
+        
     <!-- Enhanced Features with Animations -->
     <script>
         document.querySelectorAll(".hover:scale-105").forEach(item => {
