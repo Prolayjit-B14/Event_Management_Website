@@ -51,6 +51,80 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 5000);
     }
 
+    document.addEventListener("DOMContentLoaded", function () {
+        const loginBtn = document.getElementById("login-btn");
+    
+        loginBtn.addEventListener("click", async function () {
+            const email = document.getElementById("login-email").value;
+            const password = document.getElementById("login-password").value;
+            const loginError = document.getElementById("login-error");
+    
+            if (!email || !password) {
+                loginError.textContent = "Please enter email and password!";
+                loginError.classList.remove("hidden");
+                return;
+            }
+    
+            try {
+                const response = await fetch("http://localhost:5000/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password }),
+                });
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("userEmail", data.user.email);
+                    window.location.href = "profile.html"; // Redirect to profile page
+                } else {
+                    loginError.textContent = data.message || "Invalid login credentials!";
+                    loginError.classList.remove("hidden");
+                }
+            } catch (error) {
+                console.error("Login Error:", error);
+                loginError.textContent = "Server error, please try again later.";
+                loginError.classList.remove("hidden");
+            }
+        });
+    });
+    
+    document.addEventListener("DOMContentLoaded", async function () {
+        const token = localStorage.getItem("token");
+        const email = localStorage.getItem("userEmail");
+    
+        if (!token || !email) {
+            window.location.href = "login.html"; // Redirect to login if not authenticated
+            return;
+        }
+    
+        try {
+            const response = await fetch(`http://localhost:5000/user?email=${email}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+    
+            const user = await response.json();
+    
+            if (user.email) {
+                document.getElementById("profile-name").textContent = user.username;
+                document.getElementById("profile-username").textContent = `@${user.username}`;
+                document.getElementById("profile-email").textContent = user.email;
+                document.querySelector("img").src = `http://localhost:5000${user.profilePic}`;
+            }
+        } catch (error) {
+            console.error("Error fetching user profile:", error);
+        }
+    });
+    
+    document.getElementById("logout-btn").addEventListener("click", function () {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userEmail");
+        window.location.href = "login.html"; // Redirect to login page
+    });
+    
+
+
     // 🏆 Leaderboard Updates (Smooth Score Increase)
     setInterval(() => {
         document.querySelectorAll("#leaderboard-data tr td:last-child").forEach(scoreCell => {
