@@ -567,6 +567,26 @@ document.getElementById("event-form").addEventListener("submit", function(event)
     <h2 class="text-3xl font-bold">Community Forum</h2>
     <p class="text-gray-400 mt-2">Join discussions, ask questions, and share ideas.</p>
 
+    <!-- User Authentication -->
+    <div id="auth-section" class="mb-4">
+        <div id="login-section">
+            <input type="text" id="username-input" placeholder="Enter your name..." 
+                class="p-2 rounded-lg text-black" required>
+            <input type="file" id="profile-pic-input" accept="image/*" class="p-2 mt-2 bg-gray-700 rounded-lg text-white">
+            <button id="login-btn" class="px-4 py-2 bg-green-500 hover:bg-green-600 rounded-full text-white">
+                Set Profile
+            </button>
+        </div>
+        <div id="user-info" class="hidden flex items-center gap-3">
+            <img id="user-profile-pic" class="w-12 h-12 rounded-full" alt="Profile Pic">
+            <span id="user-greeting" class="text-yellow-400 text-lg"></span>
+            <button id="logout-btn" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 rounded-full text-white">
+                Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- Discussion Form -->
     <div class="mt-6 bg-gray-800 p-6 rounded-lg">
         <form id="forum-form">
             <input type="text" id="forum-input" placeholder="Start a discussion..." 
@@ -581,13 +601,11 @@ document.getElementById("event-form").addEventListener("submit", function(event)
             Discussion posted!
         </div>
 
+        <!-- Discussion List -->
         <div class="text-left mt-6">
             <h3 class="text-xl font-semibold">Recent Discussions</h3>
             <ul id="forum-list" class="mt-4 space-y-4">
                 <!-- Existing posts -->
-                <li class="bg-gray-700 p-4 rounded-lg">How to improve coding speed? - <span class="text-gray-400">by Snehasish Nag</span></li>
-                <li class="bg-gray-700 p-4 rounded-lg">Best resources for Data Structures - <span class="text-gray-400">by Debopam Sarkar</span></li>
-                <li class="bg-gray-700 p-4 rounded-lg">Tips for first hackathon - <span class="text-gray-400">by Prolayjit Biswas</span></li>
             </ul>
         </div>
     </div>
@@ -595,35 +613,86 @@ document.getElementById("event-form").addEventListener("submit", function(event)
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+    checkUserLogin(); // Check if user is logged in
     loadDiscussions(); // Load stored discussions
+});
+
+function checkUserLogin() {
+    let storedUserName = localStorage.getItem("userName");
+    let storedProfilePic = localStorage.getItem("profilePic");
+
+    if (storedUserName) {
+        document.getElementById("login-section").classList.add("hidden");
+        document.getElementById("user-info").classList.remove("hidden");
+        document.getElementById("user-greeting").textContent = `Hello, ${storedUserName}!`;
+        if (storedProfilePic) {
+            document.getElementById("user-profile-pic").src = storedProfilePic;
+        }
+    }
+}
+
+document.getElementById("login-btn").addEventListener("click", function() {
+    let userName = document.getElementById("username-input").value.trim();
+    let profilePic = document.getElementById("profile-pic-input").files[0];
+
+    if (userName === "") {
+        alert("Please enter a valid name!");
+        return;
+    }
+
+    localStorage.setItem("userName", userName);
+
+    if (profilePic) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            localStorage.setItem("profilePic", e.target.result);
+            location.reload();
+        };
+        reader.readAsDataURL(profilePic);
+    } else {
+        location.reload();
+    }
+});
+
+document.getElementById("logout-btn").addEventListener("click", function() {
+    localStorage.removeItem("userName");
+    localStorage.removeItem("profilePic");
+    location.reload();
 });
 
 document.getElementById("forum-form").addEventListener("submit", function(event) {
     event.preventDefault();
 
     let discussionText = document.getElementById("forum-input").value.trim();
+    let userName = localStorage.getItem("userName") || "Guest";
+    let userPic = localStorage.getItem("profilePic") || "https://via.placeholder.com/50";
+
     if (discussionText === "") {
         alert("Please enter a discussion topic!");
         return;
     }
 
-    let userName = "Anonymous"; // Replace with dynamic user authentication if available
-    let discussionHTML = `${discussionText} - <span class="text-gray-400">by ${userName}</span>`;
+    let discussionHTML = `
+        <li class="bg-gray-700 p-4 rounded-lg fade-in">
+            <div class="flex items-center gap-3">
+                <img src="${userPic}" class="w-10 h-10 rounded-full">
+                <span class="text-gray-400 font-semibold">${userName}</span>
+            </div>
+            <p class="mt-2">${discussionText}</p>
+            <div class="mt-2 flex items-center gap-3">
+                <button class="like-btn px-2 py-1 bg-blue-500 hover:bg-blue-600 rounded text-white">👍 0</button>
+                <button class="reply-btn px-2 py-1 bg-gray-600 hover:bg-gray-700 rounded text-white">Reply</button>
+            </div>
+            <ul class="reply-list mt-2 space-y-2"></ul>
+        </li>`;
 
-    let newDiscussion = document.createElement("li");
-    newDiscussion.classList.add("bg-gray-700", "p-4", "rounded-lg", "fade-in");
-    newDiscussion.innerHTML = discussionHTML;
+    document.getElementById("forum-list").insertAdjacentHTML("afterbegin", discussionHTML);
 
-    document.getElementById("forum-list").prepend(newDiscussion);
-
-    // Save discussion to local storage
     saveDiscussion(discussionHTML);
 
-    // Clear input field
     document.getElementById("forum-input").value = "";
 
-    // Show success toast
-    showToast("Discussion posted!");
+    attachEventListeners();
 });
 
 function saveDiscussion(discussion) {
@@ -636,20 +705,53 @@ function loadDiscussions() {
     let discussions = JSON.parse(localStorage.getItem("forumDiscussions")) || [];
     let forumList = document.getElementById("forum-list");
     discussions.forEach(discussion => {
-        let newDiscussion = document.createElement("li");
-        newDiscussion.classList.add("bg-gray-700", "p-4", "rounded-lg");
-        newDiscussion.innerHTML = discussion;
-        forumList.appendChild(newDiscussion);
+        forumList.insertAdjacentHTML("beforeend", discussion);
     });
+
+    attachEventListeners();
 }
 
-function showToast(message) {
-    let toast = document.getElementById("toast");
-    toast.textContent = message;
-    toast.classList.remove("hidden");
-    setTimeout(() => toast.classList.add("hidden"), 3000);
+function attachEventListeners() {
+    document.querySelectorAll(".like-btn").forEach(button => {
+        button.onclick = function() {
+            let count = parseInt(this.textContent.match(/\d+/)[0]) + 1;
+            this.textContent = `👍 ${count}`;
+        };
+    });
+
+    document.querySelectorAll(".reply-btn").forEach(button => {
+        button.onclick = function() {
+            let replyInput = document.createElement("input");
+            replyInput.type = "text";
+            replyInput.placeholder = "Write a reply...";
+            replyInput.className = "w-full p-2 rounded-lg text-black mt-2";
+            
+            let submitBtn = document.createElement("button");
+            submitBtn.textContent = "Post Reply";
+            submitBtn.className = "mt-2 px-3 py-1 bg-green-500 hover:bg-green-600 rounded-full text-white";
+            
+            let replyList = this.parentElement.nextElementSibling;
+
+            submitBtn.onclick = function() {
+                let replyText = replyInput.value.trim();
+                if (replyText === "") return;
+                let userName = localStorage.getItem("userName") || "Guest";
+                let userPic = localStorage.getItem("profilePic") || "https://via.placeholder.com/50";
+                let replyHTML = `<li class="flex items-center gap-2 bg-gray-600 p-2 rounded-lg">
+                    <img src="${userPic}" class="w-8 h-8 rounded-full">
+                    <span class="text-gray-400 font-semibold">${userName}</span>: ${replyText}
+                </li>`;
+                replyList.insertAdjacentHTML("beforeend", replyHTML);
+                replyInput.remove();
+                submitBtn.remove();
+            };
+
+            this.parentElement.append(replyInput, submitBtn);
+        };
+    });
 }
 </script>
+
 
 
     
