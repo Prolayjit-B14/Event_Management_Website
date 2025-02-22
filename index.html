@@ -55,11 +55,110 @@
         <div class="text-5xl font-extrabold"> Coding Ninjas 10x Club</h1>
     </section>
 
+    <section id="login" class="p-10 pt-20 text-center">
+    <h2 class="text-3xl font-bold">Login</h2>
+    <p class="text-gray-400 mt-2">Access your account</p>
+
+    <div class="mt-6 bg-gray-800 p-6 rounded-lg shadow-lg max-w-md mx-auto">
+        <form id="login-form">
+            <label for="login-email" class="sr-only">Email</label>
+            <input type="email" id="login-email" placeholder="Email" 
+                class="w-full p-3 rounded-lg text-black mb-4 focus:ring-2 focus:ring-blue-400" required>
+
+            <label for="login-password" class="sr-only">Password</label>
+            <input type="password" id="login-password" placeholder="Password" 
+                class="w-full p-3 rounded-lg text-black mb-4 focus:ring-2 focus:ring-blue-400" required>
+
+            <!-- Remember Me Checkbox -->
+            <div class="flex items-center mb-4">
+                <input type="checkbox" id="remember-me" class="mr-2">
+                <label for="remember-me" class="text-gray-300">Remember Me</label>
+            </div>
+
+            <button type="submit" id="login-btn" 
+                class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-400">
+                Login
+            </button>
+            <p id="login-error" class="text-red-500 mt-2 hidden"></p>
+        </form>
+    </div>
+</section>
+
+<script>
+document.getElementById("login-form").addEventListener("submit", async function (event) {
+    event.preventDefault(); // Prevent form from reloading the page
+
+    const email = document.getElementById("login-email").value;
+    const password = document.getElementById("login-password").value;
+    const rememberMe = document.getElementById("remember-me").checked;
+    const errorMsg = document.getElementById("login-error");
+
+    errorMsg.classList.add("hidden");
+
+    try {
+        const response = await fetch("http://localhost:3000/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Store session securely
+            if (rememberMe) {
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("role", data.role);
+                localStorage.setItem("rememberMe", "true");
+            } else {
+                sessionStorage.setItem("token", data.token);
+                sessionStorage.setItem("role", data.role);
+            }
+
+            // Notify admin upon successful login
+            sendLoginEmailToAdmin(email);
+
+            // Redirect based on role
+            window.location.href = data.role === "admin" ? "admin-dashboard.html" : "dashboard.html";
+        } else {
+            errorMsg.innerText = data.message || "Invalid login credentials!";
+            errorMsg.classList.remove("hidden");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        errorMsg.innerText = "Server not responding. Try again!";
+        errorMsg.classList.remove("hidden");
+    }
+});
+
+// Logout function
+function logout() {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = "index.html"; 
+}
+
+// Auth Check
+function checkAuth() {
+    if (!sessionStorage.getItem("token") && !localStorage.getItem("token")) {
+        window.location.href = "index.html"; 
+    }
+}
+
+// Function to notify admin (Requires backend)
+function sendLoginEmailToAdmin(email) {
+    fetch("http://localhost:3000/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+    }).then(response => response.json())
+      .then(data => console.log("Admin notified:", data))
+      .catch(error => console.error("Error:", error));
+}
+</script>
+
     
-
-
-
-    <!-- Profile  -->
+   <!-- Profile  -->
     <section id="profile" class="p-10 pt-20 text-center fade-in transition-opacity duration-500">
     <h2 class="text-3xl font-bold">User Profile</h2>
     <p class="text-gray-400 mt-2">View and update your profile information</p>
@@ -212,7 +311,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     </script>
 </section>
-        
+      
     <!-- Dashboard Section -->
     <section id="dashboard" class="h-screen flex flex-col justify-center items-center text-center p-8 fade-in">
         <h1 class="text-5xl font-extrabold">Dashboard</h1>
@@ -287,52 +386,68 @@ document.addEventListener("DOMContentLoaded", () => {
     </section>
 
 
+    <!-- Upcoming Events Section -->
+    <section id="events" class="mt-16 p-8 text-center">
+        <h2 class="text-3xl font-bold">Upcoming Events</h2>
+        <div id="event-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+            <!-- Sample Event -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition-transform">
+                <h3 class="text-xl font-semibold">Hackentine 2025</h3>
+                <p class="text-gray-400">Date: February 14, 2025</p>
+                <button onclick="registerEvent('Hackentine 2025')" class="mt-4 px-6 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Register</button>
+            </div>
+        </div>
+    </section>
 
+    <!-- Create New Event -->
+    <section class="p-8 text-center">
+        <h2 class="text-3xl font-bold">Create New Event</h2>
+        <form id="event-form" class="bg-gray-800 p-6 rounded-lg shadow-lg mt-6 w-2/3 mx-auto">
+            <input type="text" id="event-name" placeholder="Event Name" class="w-full p-2 mb-4 rounded-lg text-black" required>
+            <input type="date" id="event-date" class="w-full p-2 mb-4 rounded-lg text-black" required>
+            <textarea id="event-desc" placeholder="Event Description" class="w-full p-2 mb-4 rounded-lg text-black" required></textarea>
+            <button type="submit" class="px-6 py-2 bg-green-500 hover:bg-green-600 rounded-full font-bold">Create Event</button>
+        </form>
+    </section>
 
-<section class="p-8 text-center">
-    <h2 class="text-3xl font-bold">Create New Event</h2>
-    <form id="event-form" class="bg-gray-800 p-6 rounded-lg shadow-lg mt-6 w-2/3 mx-auto">
-        <input type="text" id="event-name" placeholder="Event Name" class="w-full p-2 mb-4 rounded-lg text-black" required>
-        <input type="date" id="event-date" class="w-full p-2 mb-4 rounded-lg text-black" required>
-        <textarea id="event-desc" placeholder="Event Description" class="w-full p-2 mb-4 rounded-lg text-black" required></textarea>
-        <button type="submit" class="px-6 py-2 bg-green-500 hover:bg-green-600 rounded-full font-bold">Create Event</button>
-    </form>
-</section>
+    <!-- JavaScript for Dynamic Event Handling -->
+    <script>
+        document.getElementById("event-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent page refresh
 
-<script>
-document.getElementById("event-form").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent form submission refresh
+            // Get input values
+            let eventName = document.getElementById("event-name").value;
+            let eventDate = document.getElementById("event-date").value;
+            let eventDesc = document.getElementById("event-desc").value;
 
-    // Get values from input fields
-    let eventName = document.getElementById("event-name").value;
-    let eventDate = document.getElementById("event-date").value;
-    let eventDesc = document.getElementById("event-desc").value;
+            if (!eventName || !eventDate || !eventDesc) {
+                alert("Please fill in all fields!");
+                return;
+            }
 
-    if (!eventName || !eventDate || !eventDesc) {
-        alert("Please fill in all fields!");
-        return;
-    }
+            // Create new event element
+            let newEvent = document.createElement("div");
+            newEvent.classList.add("bg-gray-800", "p-6", "rounded-lg", "shadow-lg", "hover:scale-105", "transition-transform");
+            newEvent.innerHTML = `
+                <h3 class="text-xl font-semibold">${eventName}</h3>
+                <p class="text-gray-400">Date: ${eventDate}</p>
+                <p class="text-gray-500">${eventDesc}</p>
+                <button onclick="registerEvent('${eventName}')" class="mt-4 px-6 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Register</button>
+            `;
 
-    // Create new event element
-    let newEvent = document.createElement("div");
-    newEvent.classList.add("bg-gray-800", "p-6", "rounded-lg", "shadow-lg", "hover:scale-105", "transition-transform");
-    newEvent.innerHTML = `
-        <h3 class="text-xl font-semibold">${eventName}</h3>
-        <p class="text-gray-400">Date: ${eventDate}</p>
-        <p class="text-gray-500">${eventDesc}</p>
-        <button class="mt-4 px-6 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Register</button>
-    `;
+            // Append new event to event list
+            document.getElementById("event-list").appendChild(newEvent);
 
-    // Append new event to event list
-    document.getElementById("event-list").appendChild(newEvent);
+            // Clear the form fields
+            document.getElementById("event-form").reset();
 
-    // Clear the form fields
-    document.getElementById("event-form").reset();
+            alert("Event Created Successfully!");
+        });
 
-    alert("Event Created Successfully!");
-});
-</script>
-
+        function registerEvent(eventName) {
+            alert(`You have successfully registered for ${eventName}!`);
+        }
+    </script>
 
     <!-- Leaderboard -->
     <ssection id="leaderboard" section class="p-10 pt-20 text-center fade-in">
@@ -535,246 +650,56 @@ document.getElementById("event-form").addEventListener("submit", function(event)
         });
     </script>
     
+  
 <!-- Forum Section -->
 <section id="forum" class="p-8 text-center fade-in">
     <h2 class="text-3xl font-bold">Community Forum</h2>
     <p class="text-gray-400 mt-2">Join discussions, ask questions, and share ideas.</p>
 
-    <!-- User Authentication -->
-    <div id="auth-section" class="mb-4">
-        <div id="login-section">
-            <input type="text" id="username-input" placeholder="Enter your name..." 
-                class="p-2 rounded-lg text-black" required>
-            <input type="file" id="profile-pic-input" accept="image/*" class="p-2 mt-2 bg-gray-700 rounded-lg text-white">
-            <button id="login-btn" class="px-4 py-2 bg-green-500 hover:bg-green-600 rounded-full text-white">
-                Set Profile
-            </button>
-        </div>
-        <div id="user-info" class="hidden flex items-center gap-3">
-            <img id="user-profile-pic" class="w-12 h-12 rounded-full" alt="Profile Pic">
-            <span id="user-greeting" class="text-yellow-400 text-lg"></span>
-            <button id="logout-btn" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 rounded-full text-white">
-                Logout
-            </button>
-        </div>
-    </div>
-
-<!-- Forum Section -->
-<section id="forum" class="p-8 text-center fade-in">
-    <h2 class="text-3xl font-bold">Community Forum</h2>
-    <p class="text-gray-400 mt-2">Join discussions, ask questions, and share ideas.</p>
-    
-<!-- Toast Notification -->         
-    <div id="toast" class="hidden fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg"> 
-        Discussion posted!        
-    </div>
-
-    
-    <!-- User Authentication -->
-    <div id="auth-section" class="mb-4 mt-4">
-        <div id="login-section">
-            <input type="text" id="username-input" placeholder="Enter your name..." class="p-2 rounded-lg text-black" required>
-            <input type="file" id="profile-pic-input" accept="image/*" class="p-2 mt-2 bg-gray-700 rounded-lg text-white">
-            <button id="login-btn" class="px-4 py-2 bg-green-500 hover:bg-green-600 rounded-full text-white">Set Profile</button>
-        </div>
-        <div id="user-info" class="hidden flex items-center gap-3">
-            <img id="user-profile-pic" class="w-12 h-12 rounded-full" alt="Profile Pic">
-            <span id="user-greeting" class="text-yellow-400 text-lg"></span>
-            <button id="logout-btn" class="ml-2 px-3 py-1 bg-red-500 hover:bg-red-600 rounded-full text-white">Logout</button>
-        </div>
-    </div>
-
-    <!-- Search and Filter -->
-    <div class="mb-6 flex flex-col md:flex-row gap-4">
-        <input type="text" id="search-input" placeholder="Search discussions..." class="p-2 w-full md:w-1/2 rounded-lg text-black">
-        <select id="filter-user" class="p-2 rounded-lg text-black w-full md:w-1/4">
-            <option value="">Filter by user</option>
-        </select>
-    </div>
-
-    <!-- Discussion Form -->
     <div class="mt-6 bg-gray-800 p-6 rounded-lg">
         <form id="forum-form">
-            <input type="text" id="forum-input" placeholder="Start a discussion..." class="w-full p-2 rounded-lg text-black" required maxlength="200">
+            <input type="text" id="forum-input" placeholder="Start a discussion..." class="w-full p-2 rounded-lg text-black" required>
             <button type="submit" class="mt-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Post</button>
         </form>
 
-        <!-- Discussion List -->
         <div class="text-left mt-6">
             <h3 class="text-xl font-semibold">Recent Discussions</h3>
-            <ul id="forum-list" class="mt-4 space-y-4"></ul>
+            <ul id="forum-list" class="mt-4 space-y-4">
                 <li class="bg-gray-700 p-4 rounded-lg">How to improve coding speed? - <span class="text-gray-400">by Snehasish Nag</span></li>
                 <li class="bg-gray-700 p-4 rounded-lg">Best resources for Data Structures - <span class="text-gray-400">by Debopam Sarkar</span></li>
                 <li class="bg-gray-700 p-4 rounded-lg">Tips for first hackathon - <span class="text-gray-400">by Prolayjit Biswas</span></li>
-            <ul/>
+            </ul>
         </div>
     </div>
 </section>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    checkUserLogin();
-    updateUserFilter();
-});
-
-function checkUserLogin() {
-    let storedUserName = localStorage.getItem("userName");
-    let storedProfilePic = localStorage.getItem("profilePic");
-
-    if (storedUserName) {
-        document.getElementById("login-section").classList.add("hidden");
-        document.getElementById("user-info").classList.remove("hidden");
-        document.getElementById("user-greeting").textContent = `Hello, ${storedUserName}!`;
-        document.getElementById("user-profile-pic").src = storedProfilePic || "https://via.placeholder.com/50";
-    }
-}
-
-document.getElementById("login-btn").addEventListener("click", function() {
-    let username = document.getElementById("username-input").value.trim();
-    let profilePicInput = document.getElementById("profile-pic-input").files[0];
-
-    if (!username) {
-        alert("Please enter a name!");
-        return;
-    }
-
-    localStorage.setItem("userName", username);
-
-    if (profilePicInput) {
-        let reader = new FileReader();
-        reader.onload = function(e) {
-            localStorage.setItem("profilePic", e.target.result);
-            checkUserLogin();
-        };
-        reader.readAsDataURL(profilePicInput);
-    } else {
-        checkUserLogin();
-    }
-});
-
-document.getElementById("logout-btn").addEventListener("click", function() {
-    localStorage.removeItem("userName");
-    localStorage.removeItem("profilePic");
-    location.reload();
-});
-
 document.getElementById("forum-form").addEventListener("submit", function(event) {
-    event.preventDefault();
+    event.preventDefault(); // Prevent page reload
 
+    // Get input value
     let discussionText = document.getElementById("forum-input").value.trim();
-    let userName = localStorage.getItem("userName") || "Anonymous";
-    let userPic = localStorage.getItem("profilePic") || "https://via.placeholder.com/50";
-
+    
     if (discussionText === "") {
         alert("Please enter a discussion topic!");
         return;
     }
 
-    let discussionHTML = `
-        <li class="bg-gray-700 p-4 rounded-lg fade-in discussion" data-user="${userName.toLowerCase()}">
-            <div class="flex items-center gap-3">
-                <img src="${userPic}" class="w-10 h-10 rounded-full">
-                <span class="text-gray-400 font-semibold discussion-user">${userName}</span>
-            </div>
-            <p class="mt-2 discussion-text">${discussionText}</p>
-            <div class="flex items-center gap-4 mt-3">
-                <button class="like-btn px-3 py-1 bg-pink-500 hover:bg-pink-600 rounded-full text-white">❤️ 0</button>
-                <button class="edit-btn px-3 py-1 bg-yellow-500 hover:bg-yellow-600 rounded-full text-white">Edit</button>
-                <button class="delete-btn px-3 py-1 bg-red-500 hover:bg-red-600 rounded-full text-white">Delete</button>
-            </div>
-        </li>`;
+    // Create new list item
+    let newDiscussion = document.createElement("li");
+    newDiscussion.classList.add("bg-gray-700", "p-4", "rounded-lg", "fade-in");
+    newDiscussion.innerHTML = ${discussionText} - <span class="text-gray-400">by Anonymous</span>;
 
-    document.getElementById("forum-list").insertAdjacentHTML("afterbegin", discussionHTML);
+    // Append to discussion list
+    document.getElementById("forum-list").prepend(newDiscussion);
+
+    // Clear input field
     document.getElementById("forum-input").value = "";
-    updateUserFilter();
-    addDiscussionListeners();
+
+    // Show success message
+    alert("Your discussion has been posted!");
 });
-
-function addDiscussionListeners() {
-    document.querySelectorAll(".like-btn").forEach(button => {
-        button.addEventListener("click", function() {
-            let count = parseInt(this.textContent.split(" ")[1]) + 1;
-            this.textContent = `❤️ ${count}`;
-        });
-    });
-
-    document.querySelectorAll(".edit-btn").forEach(button => {
-        button.addEventListener("click", function() {
-            let discussionTextElement = this.parentElement.previousElementSibling;
-            let newText = prompt("Edit your discussion:", discussionTextElement.textContent);
-            if (newText) {
-                discussionTextElement.textContent = newText;
-            }
-        });
-    });
-
-    document.querySelectorAll(".delete-btn").forEach(button => {
-        button.addEventListener("click", function() {
-            if (confirm("Are you sure you want to delete this post?")) {
-                this.closest(".discussion").remove();
-                updateUserFilter();
-            }
-        });
-    });
-}
-
-// Search Discussions
-document.getElementById("search-input").addEventListener("input", function() {
-    let searchQuery = this.value.toLowerCase();
-    document.querySelectorAll(".discussion").forEach(discussion => {
-        let text = discussion.querySelector(".discussion-text").textContent.toLowerCase();
-        discussion.style.display = text.includes(searchQuery) ? "block" : "none";
-    });
-});
-
-// Filter by User
-document.getElementById("filter-user").addEventListener("change", function() {
-    let selectedUser = this.value.toLowerCase();
-    document.querySelectorAll(".discussion").forEach(discussion => {
-        let discussionUser = discussion.getAttribute("data-user");
-        discussion.style.display = selectedUser === "" || discussionUser === selectedUser ? "block" : "none";
-    });
-});
-
-// Update User Filter Dropdown
-function updateUserFilter() {
-    let userNames = new Set();
-    document.querySelectorAll(".discussion-user").forEach(user => userNames.add(user.textContent));
-
-    let filterDropdown = document.getElementById("filter-user");
-    filterDropdown.innerHTML = `<option value="">Filter by user</option>`;
-    userNames.forEach(name => {
-        filterDropdown.innerHTML += `<option value="${name}">${name}</option>`;
-    });
-}
-// SEARCH FEATURE
-document.getElementById("search-input").addEventListener("input", function() {
-    let searchText = this.value.toLowerCase();
-    document.querySelectorAll(".discussion").forEach(discussion => {
-        let text = discussion.querySelector(".discussion-text").textContent.toLowerCase();
-        discussion.style.display = text.includes(searchText) ? "block" : "none";
-    });
-});
-
-// FILTER BY LIKES
-document.getElementById("filter-btn").addEventListener("click", function() {
-    let discussions = Array.from(document.querySelectorAll(".discussion"));
-    discussions.sort((a, b) => {
-        return parseInt(b.querySelector(".like-btn").textContent.match(/\d+/)[0]) -
-               parseInt(a.querySelector(".like-btn").textContent.match(/\d+/)[0]);
-    });
-    let forumList = document.getElementById("forum-list");
-    forumList.innerHTML = "";
-    discussions.forEach(discussion => forumList.appendChild(discussion));
-});
-
-    
-addDiscussionListeners();
 </script>
-
-
-
-
     
 <section id="socials" class="p-8 text-center fade-in">
     <h2 class="text-3xl font-bold text-center">Stay Connected</h2>
