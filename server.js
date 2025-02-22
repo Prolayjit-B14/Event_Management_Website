@@ -63,3 +63,48 @@ app.get("/user", async (req, res) => {
 });
 
 app.listen(5000, () => console.log("Server running on port 5000"));
+
+const express = require("express");
+const nodemailer = require("nodemailer");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+require("dotenv").config();
+
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+
+// Email Configuration (Use your email credentials)
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.ADMIN_EMAIL, // Set in .env file
+        pass: process.env.ADMIN_PASSWORD, // Set in .env file
+    },
+});
+
+app.post("/send-email", (req, res) => {
+    const { email } = req.body;
+
+    const mailOptions = {
+        from: process.env.ADMIN_EMAIL,
+        to: process.env.ADMIN_EMAIL, // Admin receives the email
+        subject: "New Login Detected",
+        text: `User with email ${email} has logged in.`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error);
+            res.status(500).json({ message: "Failed to send email" });
+        } else {
+            console.log("Email sent: " + info.response);
+            res.status(200).json({ message: "Email sent successfully" });
+        }
+    });
+});
+
+// Start Server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
