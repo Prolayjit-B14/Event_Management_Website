@@ -152,13 +152,13 @@ function sendLoginEmailToAdmin(email) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
     }).then(response => response.json())
-      .then(data => console.log("Admin notified:", data))
-      .catch(error => console.error("Error:", error));
+        .then(data => console.log("Admin notified:", data))
+        .catch(error => console.error("Error:", error));
 }
 </script>
 
     
-   <!-- Profile  -->
+    <!-- Profile  -->
     <section id="profile" class="p-10 pt-20 text-center fade-in transition-opacity duration-500">
     <h2 class="text-3xl font-bold">User Profile</h2>
     <p class="text-gray-400 mt-2">View and update your profile information</p>
@@ -311,7 +311,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     </script>
 </section>
-      
+    
     <!-- Dashboard Section -->
     <section id="dashboard" class="h-screen flex flex-col justify-center items-center text-center p-8 fade-in">
         <h1 class="text-5xl font-extrabold">Dashboard</h1>
@@ -387,27 +387,62 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     <!-- Upcoming Events Section -->
-    <section id="events" class="mt-16 p-8 text-center">
-        <h2 class="text-3xl font-bold">Upcoming Events</h2>
-        <div id="event-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            <!-- Sample Event -->
-            <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition-transform">
-                <h3 class="text-xl font-semibold">Hackentine 2025</h3>
-                <p class="text-gray-400">Date: February 14, 2025</p>
-                <button onclick="registerEvent('Hackentine 2025')" class="mt-4 px-6 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Register</button>
-            </div>
-            <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition-transform">
-                <h3 class="text-xl font-semibold">Hack-Arc 2025</h3>
-                <p class="text-gray-400">Date: March 21, 2025</p>
-                <button onclick="registerEvent('Hack-Arc 2025')" class="mt-4 px-6 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Register</button>
-            </div>
-            <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition-transform">
-                <h3 class="text-xl font-semibold">Challenge 2025</h3>
-                <p class="text-gray-400">Date: April 2, 2025</p>
-                <button onclick="registerEvent('Code Challenge 2025')" class="mt-4 px-6 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Register</button>
-            </div>
-        </div>
-    </section>
+<section id="events" class="mt-16 p-8 text-center">
+    <h2 class="text-3xl font-bold">Upcoming Events</h2>
+    <div id="event-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        <!-- Events will be dynamically inserted here -->
+    </div>
+</section>
+
+<!-- Modal for Registration Confirmation -->
+<div id="registrationModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+        <h2 class="text-2xl font-bold">Registration Successful!</h2>
+        <p id="modalMessage" class="mt-2 text-gray-600"></p>
+        <button onclick="closeModal()" class="mt-4 px-6 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded-full">OK</button>
+    </div>
+</div>
+
+<script>
+    // Sample Events Data (Replace with API fetch)
+    const events = [
+        { name: "Hackentine 2025", date: "February 14, 2025" },
+        { name: "Hack-Arc 2025", date: "March 21, 2025" },
+        { name: "Code Challenge 2025", date: "April 2, 2025" }
+    ];
+
+    // Function to Load Events Dynamically
+    function loadEvents() {
+        const eventList = document.getElementById("event-list");
+        eventList.innerHTML = ""; // Clear existing events
+
+        events.forEach(event => {
+            const eventCard = `
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition-transform">
+                    <h3 class="text-xl font-semibold text-white">${event.name}</h3>
+                    <p class="text-gray-400">Date: ${event.date}</p>
+                    <button onclick="registerEvent('${event.name}')" class="mt-4 px-6 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Register</button>
+                </div>
+            `;
+            eventList.innerHTML += eventCard;
+        });
+    }
+
+    // Show Registration Confirmation Modal
+    function registerEvent(eventName) {
+        document.getElementById("modalMessage").textContent = `You have successfully registered for ${eventName}!`;
+        document.getElementById("registrationModal").classList.remove("hidden");
+    }
+
+    // Close Modal
+    function closeModal() {
+        document.getElementById("registrationModal").classList.add("hidden");
+    }
+
+    // Load Events on Page Load
+    document.addEventListener("DOMContentLoaded", loadEvents);
+</script>
+
 
     <!-- Create New Event -->
     <section class="p-8 text-center">
