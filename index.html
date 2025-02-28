@@ -711,13 +711,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
 
     
-    <!-- User Authentication -->
-    <div id="auth" class="text-center mb-6">
-        <input type="text" id="username" placeholder="Enter username" class="p-2 rounded-lg text-black mb-2">
-        <button onclick="loginUser()" class="px-4 py-2 bg-green-500 hover:bg-green-600 rounded-full font-bold">Login</button>
-        <p id="welcome-msg" class="mt-2 hidden"></p>
-    </div>
-
+    
     <!-- Forum Section -->
     <section id="forum" class="text-center">
         <h2 class="text-3xl font-bold">Community Forum</h2>
@@ -725,7 +719,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <div class="mt-6 bg-gray-800 p-6 rounded-lg">
             <form id="forum-form">
-                <input type="text" id="forum-input" placeholder="Start a discussion..." class="w-full p-2 rounded-lg text-black" required>
+                <input type="text" id="forum-name" placeholder="Your name" class="w-full p-2 rounded-lg text-black mb-2" required>
+                <textarea id="forum-input" placeholder="Start a discussion..." class="w-full p-2 rounded-lg text-black" required></textarea>
+                <emoji-picker id="emoji-picker"></emoji-picker>
                 <button type="submit" class="mt-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Post</button>
             </form>
 
@@ -745,29 +741,27 @@ document.addEventListener("DOMContentLoaded", () => {
         document.addEventListener("DOMContentLoaded", loadDiscussions);
         document.getElementById("forum-form").addEventListener("submit", addDiscussion);
         document.getElementById("search-bar").addEventListener("input", filterDiscussions);
-
-        function loginUser() {
-            let username = document.getElementById("username").value.trim();
-            if (!username) return alert("Enter a username");
-            localStorage.setItem("username", username);
-            document.getElementById("welcome-msg").innerText = `Welcome, ${username}!`;
-            document.getElementById("welcome-msg").classList.remove("hidden");
-        }
+        document.getElementById("emoji-picker").addEventListener('emoji-click', event => {
+            document.getElementById("forum-input").value += event.detail.unicode;
+        });
 
         function addDiscussion(event) {
             event.preventDefault();
-            let username = localStorage.getItem("username");
-            if (!username) return alert("Please log in first");
-
+            let name = document.getElementById("forum-name").value.trim();
             let text = document.getElementById("forum-input").value.trim();
-            if (!text) return alert("Enter a discussion topic");
+            if (!name || !text) {
+                alert("Please enter both your name and a discussion topic!");
+                return;
+            }
             
             let discussion = {
                 id: Date.now(),
-                username: username,
+                name: name,
                 text: text,
                 time: new Date().toLocaleString(),
-                votes: 0
+                likes: 0,
+                replies: [],
+                pinned: false
             };
             saveDiscussion(discussion);
             document.getElementById("forum-form").reset();
@@ -784,44 +778,40 @@ document.addEventListener("DOMContentLoaded", () => {
             let discussions = JSON.parse(localStorage.getItem("discussions")) || [];
             let forumList = document.getElementById("forum-list");
             forumList.innerHTML = "";
+            discussions.sort((a, b) => b.pinned - a.pinned);
             discussions.forEach(discussion => {
                 let li = document.createElement("li");
                 li.className = "bg-gray-700 p-4 rounded-lg flex flex-col space-y-2";
                 li.innerHTML = `
-                    <div>
-                        <span class="text-white">${discussion.text} - <span class="text-gray-400">by ${discussion.username}</span></span>
-                        <p class="text-gray-400 text-sm">${discussion.time}</p>
+                    <div class="flex items-center space-x-4">
+                        <img src="https://via.placeholder.com/40" alt="User Avatar" class="rounded-full w-10 h-10">
+                        <div>
+                            <span class="text-white">${discussion.text} - <span class="text-gray-400">by ${discussion.name}</span></span>
+                            <p class="text-gray-400 text-sm">${discussion.time}</p>
+                        </div>
                     </div>
                     <div class="flex space-x-4">
-                        <button class="text-green-400 hover:text-green-500" onclick="voteDiscussion(${discussion.id}, 1)">Upvote (<span>${discussion.votes}</span>)</button>
-                        <button class="text-red-400 hover:text-red-500" onclick="voteDiscussion(${discussion.id}, -1)">Downvote</button>
+                        <button class="text-blue-400 hover:text-blue-500" onclick="replyToDiscussion(${discussion.id})">Reply</button>
+                        <button class="text-red-400 hover:text-red-500" onclick="deleteDiscussion(${discussion.id})">Delete</button>
+                        <button class="text-yellow-400 hover:text-yellow-500" onclick="likeDiscussion(${discussion.id})">Like (<span>${discussion.likes}</span>)</button>
+                        <button class="text-green-400 hover:text-green-500" onclick="togglePin(${discussion.id})">${discussion.pinned ? 'Unpin' : 'Pin'}</button>
                     </div>
+                    <ul class="replies pl-4 hidden"></ul>
                 `;
                 forumList.appendChild(li);
             });
         }
 
-        function voteDiscussion(id, value) {
+        function togglePin(id) {
             let discussions = JSON.parse(localStorage.getItem("discussions")) || [];
             let discussion = discussions.find(d => d.id === id);
             if (discussion) {
-                discussion.votes += value;
+                discussion.pinned = !discussion.pinned;
                 localStorage.setItem("discussions", JSON.stringify(discussions));
                 loadDiscussions();
             }
         }
-
-        function filterDiscussions(event) {
-            let searchTerm = event.target.value.toLowerCase();
-            let discussions = document.querySelectorAll("#forum-list li");
-            discussions.forEach(discussion => {
-                let text = discussion.innerText.toLowerCase();
-                discussion.style.display = text.includes(searchTerm) ? "block" : "none";
-            });
-        }
     </script>
-
-
 
     
 <section id="socials" class="p-8 text-center fade-in">
