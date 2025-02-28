@@ -711,6 +711,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Forum</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white p-8">
+    
     <!-- User Authentication -->
     <div id="auth" class="text-center mb-6">
         <input type="text" id="username" placeholder="Enter username" class="p-2 rounded-lg text-black mb-2">
@@ -801,11 +811,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                     <p class="text-white">${discussion.text}</p>
                     <div class="flex space-x-4">
-                        <button class="text-green-400 hover:text-green-500" onclick="voteDiscussion(${discussion.id}, 1)">Upvote (<span id="votes-${discussion.id}">${discussion.votes}</span>)</button>
-                        <button class="text-red-400 hover:text-red-500" onclick="voteDiscussion(${discussion.id}, -1)">Downvote</button>
-                        <button class="text-blue-400 hover:text-blue-500" onclick="replyDiscussion(${discussion.id})">Reply</button>
-                        <button class="text-yellow-400 hover:text-yellow-500" onclick="togglePin(${discussion.id})">${discussion.pinned ? "Unpin" : "Pin"}</button>
-                        <button class="text-gray-400 hover:text-gray-500" onclick="deleteDiscussion(${discussion.id})">Delete</button>
+                        <button class="text-green-400 hover:text-green-500" onclick="voteDiscussion(${discussion.id}, 1)">👍 (<span id="votes-${discussion.id}">${discussion.votes}</span>)</button>
+                        <button class="text-red-400 hover:text-red-500" onclick="voteDiscussion(${discussion.id}, -1)">👎</button>
+                        <button class="text-blue-400 hover:text-blue-500" onclick="replyDiscussion(${discussion.id})">💬 Reply</button>
+                        <button class="text-yellow-400 hover:text-yellow-500" onclick="togglePin(${discussion.id})">📌 ${discussion.pinned ? "Unpin" : "Pin"}</button>
+                        <button class="text-gray-400 hover:text-gray-500" onclick="deleteDiscussion(${discussion.id})">🗑️ Delete</button>
                     </div>
                     <ul id="replies-${discussion.id}" class="mt-2 space-y-2"></ul>
                 `;
@@ -830,6 +840,9 @@ document.addEventListener("DOMContentLoaded", () => {
             loadDiscussions();
         }
     </script>
+</body>
+</html>
+
 
 
     <section id="reviews" class="p-10 text-center bg-gray-900 text-white">
