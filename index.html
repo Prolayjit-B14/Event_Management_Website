@@ -708,18 +708,9 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     </script>
-    
 
- 
-    
 
     
-
-    <!-- Forum Section -->
-    <section id="forum" class="text-center">
-        <h2 class="text-3xl font-bold">Community Forum</h2>
-        <p class="text-gray-400 mt-2">Join discussions, ask questions, and share ideas.</p>
-
     <!-- User Authentication -->
     <div id="auth" class="text-center mb-6">
         <input type="text" id="username" placeholder="Enter username" class="p-2 rounded-lg text-black mb-2">
@@ -727,17 +718,22 @@ document.addEventListener("DOMContentLoaded", () => {
         <p id="welcome-msg" class="mt-2 hidden"></p>
     </div>
 
+    <!-- Forum Section -->
+    <section id="forum" class="text-center">
+        <h2 class="text-3xl font-bold">Community Forum</h2>
+        <p class="text-gray-400 mt-2">Join discussions, ask questions, and share ideas.</p>
+
         <div class="mt-6 bg-gray-800 p-6 rounded-lg">
             <form id="forum-form">
                 <input type="text" id="forum-input" placeholder="Start a discussion..." class="w-full p-2 rounded-lg text-black" required>
                 <button type="submit" class="mt-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Post</button>
             </form>
-            
-            <!-- Search Bar -->
+
+            <!-- Search bar for filtering discussions -->
             <div class="mt-6">
                 <input type="text" id="search-bar" placeholder="Search discussions..." class="p-2 rounded-lg text-black w-full mb-4">
             </div>
-            
+
             <div class="text-left mt-6">
                 <h3 class="text-xl font-semibold">Recent Discussions</h3>
                 <ul id="forum-list" class="mt-4 space-y-4"></ul>
@@ -758,11 +754,6 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("welcome-msg").classList.remove("hidden");
         }
 
-        function getAvatar(username) {
-            let initials = username.charAt(0).toUpperCase();
-            return `<span class='w-10 h-10 bg-blue-500 flex items-center justify-center rounded-full text-white font-bold'>${initials}</span>`;
-        }
-
         function addDiscussion(event) {
             event.preventDefault();
             let username = localStorage.getItem("username");
@@ -774,10 +765,12 @@ document.addEventListener("DOMContentLoaded", () => {
             let discussion = {
                 id: Date.now(),
                 username: username,
+                avatar: `https://i.pravatar.cc/50?u=${username}`,
                 text: text,
                 time: new Date().toLocaleString(),
                 votes: 0,
-                pinned: false
+                pinned: false,
+                replies: []
             };
             saveDiscussion(discussion);
             document.getElementById("forum-form").reset();
@@ -794,23 +787,27 @@ document.addEventListener("DOMContentLoaded", () => {
             let discussions = JSON.parse(localStorage.getItem("discussions")) || [];
             let forumList = document.getElementById("forum-list");
             forumList.innerHTML = "";
-            
-            discussions.sort((a, b) => b.pinned - a.pinned || b.votes - a.votes);
-            
+            discussions.sort((a, b) => b.pinned - a.pinned);
             discussions.forEach(discussion => {
                 let li = document.createElement("li");
-                li.className = "bg-gray-700 p-4 rounded-lg flex space-x-4 items-center";
+                li.className = "bg-gray-700 p-4 rounded-lg flex flex-col space-y-2";
                 li.innerHTML = `
-                    ${getAvatar(discussion.username)}
-                    <div class="flex-1">
-                        <span class="text-white">${discussion.text} - <span class="text-gray-400">by ${discussion.username}</span></span>
-                        <p class="text-gray-400 text-sm">${discussion.time}</p>
-                        <div class="flex space-x-4 mt-2">
-                            <button class="text-green-400 hover:text-green-500" onclick="voteDiscussion(${discussion.id}, 1)">Upvote (<span>${discussion.votes}</span>)</button>
-                            <button class="text-red-400 hover:text-red-500" onclick="voteDiscussion(${discussion.id}, -1)">Downvote</button>
-                            <button class="text-yellow-400 hover:text-yellow-500" onclick="togglePin(${discussion.id})">${discussion.pinned ? 'Unpin' : 'Pin'}</button>
+                    <div class="flex items-center space-x-4">
+                        <img src="${discussion.avatar}" class="w-10 h-10 rounded-full" alt="Avatar">
+                        <div>
+                            <span class="text-white font-bold">${discussion.username}</span>
+                            <p class="text-gray-400 text-sm">${discussion.time}</p>
                         </div>
                     </div>
+                    <p class="text-white">${discussion.text}</p>
+                    <div class="flex space-x-4">
+                        <button class="text-green-400 hover:text-green-500" onclick="voteDiscussion(${discussion.id}, 1)">Upvote (<span id="votes-${discussion.id}">${discussion.votes}</span>)</button>
+                        <button class="text-red-400 hover:text-red-500" onclick="voteDiscussion(${discussion.id}, -1)">Downvote</button>
+                        <button class="text-blue-400 hover:text-blue-500" onclick="replyDiscussion(${discussion.id})">Reply</button>
+                        <button class="text-yellow-400 hover:text-yellow-500" onclick="togglePin(${discussion.id})">${discussion.pinned ? "Unpin" : "Pin"}</button>
+                        <button class="text-gray-400 hover:text-gray-500" onclick="deleteDiscussion(${discussion.id})">Delete</button>
+                    </div>
+                    <ul id="replies-${discussion.id}" class="mt-2 space-y-2"></ul>
                 `;
                 forumList.appendChild(li);
             });
@@ -821,34 +818,18 @@ document.addEventListener("DOMContentLoaded", () => {
             let discussion = discussions.find(d => d.id === id);
             if (discussion) {
                 discussion.votes += value;
+                document.getElementById(`votes-${id}`).innerText = discussion.votes;
                 localStorage.setItem("discussions", JSON.stringify(discussions));
-                loadDiscussions();
             }
         }
 
-        function togglePin(id) {
+        function deleteDiscussion(id) {
             let discussions = JSON.parse(localStorage.getItem("discussions")) || [];
-            let discussion = discussions.find(d => d.id === id);
-            if (discussion) {
-                discussion.pinned = !discussion.pinned;
-                localStorage.setItem("discussions", JSON.stringify(discussions));
-                loadDiscussions();
-            }
-        }
-
-        function filterDiscussions(event) {
-            let searchTerm = event.target.value.toLowerCase();
-            let discussions = document.querySelectorAll("#forum-list li");
-            discussions.forEach(discussion => {
-                let text = discussion.innerText.toLowerCase();
-                discussion.style.display = text.includes(searchTerm) ? "block" : "none";
-            });
+            discussions = discussions.filter(d => d.id !== id);
+            localStorage.setItem("discussions", JSON.stringify(discussions));
+            loadDiscussions();
         }
     </script>
-
-
-  
-    
 
 
     <section id="reviews" class="p-10 text-center bg-gray-900 text-white">
