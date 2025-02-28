@@ -730,27 +730,11 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="text-left mt-6">
             <h3 class="text-xl font-semibold">Recent Discussions</h3>
             <ul id="forum-list" class="mt-4 space-y-4">
-                <!-- Example discussion -->
+                <!-- Example discussions -->
                 <li class="bg-gray-700 p-4 rounded-lg flex justify-between items-start">
                     <div class="flex items-center space-x-4">
                         <img src="https://via.placeholder.com/40" alt="User Avatar" class="rounded-full w-10 h-10">
                         <span class="text-white">How to improve coding speed? - <span class="text-gray-400">by Snehasish Nag</span></span>
-                    </div>
-                    <div class="flex space-x-2">
-                        <button class="text-blue-400 hover:text-blue-500" onclick="addReply(this)">Reply</button>
-                        <button class="text-red-400 hover:text-red-500" onclick="deleteDiscussion(this)">Delete</button>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <img src="https://via.placeholder.com/40" alt="User Avatar" class="rounded-full w-10 h-10">
-                        <span class="text-white">What Language to start ?- <span class="text-gray-400">by Debopam Sarkar</span></span>
-                    </div>
-                    <div class="flex space-x-2">
-                        <button class="text-blue-400 hover:text-blue-500" onclick="addReply(this)">Reply</button>
-                        <button class="text-red-400 hover:text-red-500" onclick="deleteDiscussion(this)">Delete</button>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <img src="https://via.placeholder.com/40" alt="User Avatar" class="rounded-full w-10 h-10">
-                        <span class="text-white">Hackathon Tips - <span class="text-gray-400">by prolayjit Biswas</span></span>
                     </div>
                     <div class="flex space-x-2">
                         <button class="text-blue-400 hover:text-blue-500" onclick="addReply(this)">Reply</button>
@@ -761,16 +745,10 @@ document.addEventListener("DOMContentLoaded", () => {
                         <button class="text-yellow-400 hover:text-yellow-500" onclick="likeDiscussion(this)">
                             Like
                         </button>
-                        <span class="text-white" id="like-count-1">0</span>
+                        <span class="text-white like-count">0</span>
                     </div>
-
                     <!-- Replies section -->
-                    <ul id="replies-1" class="mt-4 space-y-2 pl-4 hidden">
-                        <!-- Example reply -->
-                        <li class="bg-gray-600 p-3 rounded-lg flex items-center space-x-4">
-                            <span class="text-white">Try practicing more coding problems! - <span class="text-gray-400">by Anonymous</span></span>
-                        </li>
-                    </ul>
+                    <ul class="replies mt-4 space-y-2 pl-4 hidden"></ul>
                 </li>
             </ul>
         </div>
@@ -784,17 +762,17 @@ document.getElementById("forum-form").addEventListener("submit", function(event)
     // Get input values
     let name = document.getElementById("forum-name").value.trim();
     let discussionText = document.getElementById("forum-input").value.trim();
-    
-    if (discussionText === "" || name === "") {
+
+    if (!name || !discussionText) {
         alert("Please enter both your name and a discussion topic!");
         return;
     }
 
-    // Create new list item
+    let uniqueId = Date.now(); // Generate unique ID
+
+    // Create new discussion item
     let newDiscussion = document.createElement("li");
     newDiscussion.classList.add("bg-gray-700", "p-4", "rounded-lg", "flex", "justify-between", "items-start", "fade-in");
-
-    // Avatar and user info
     newDiscussion.innerHTML = `
         <div class="flex items-center space-x-4">
             <img src="https://via.placeholder.com/40" alt="User Avatar" class="rounded-full w-10 h-10">
@@ -808,9 +786,9 @@ document.getElementById("forum-form").addEventListener("submit", function(event)
             <button class="text-yellow-400 hover:text-yellow-500" onclick="likeDiscussion(this)">
                 Like
             </button>
-            <span class="text-white" id="like-count-${Date.now()}">0</span>
+            <span class="text-white like-count">0</span>
         </div>
-        <ul id="replies-${Date.now()}" class="mt-4 space-y-2 pl-4 hidden"></ul>
+        <ul class="replies mt-4 space-y-2 pl-4 hidden"></ul>
     `;
 
     // Append to discussion list
@@ -819,20 +797,17 @@ document.getElementById("forum-form").addEventListener("submit", function(event)
     // Clear input fields
     document.getElementById("forum-name").value = "";
     document.getElementById("forum-input").value = "";
-
-    // Show success message
-    alert("Your discussion has been posted!");
 });
 
 // Delete discussion
 function deleteDiscussion(button) {
-    button.closest('li').remove();
+    button.closest("li").remove();
 }
 
 // Add reply
 function addReply(button) {
-    let discussion = button.closest('li');
-    let repliesSection = discussion.querySelector('ul');
+    let discussion = button.closest("li");
+    let repliesSection = discussion.querySelector(".replies");
     let replyText = prompt("Enter your reply:");
 
     if (replyText) {
@@ -850,8 +825,7 @@ function addReply(button) {
 // Like discussion
 function likeDiscussion(button) {
     let likeCount = button.nextElementSibling;
-    let currentLikes = parseInt(likeCount.innerText);
-    likeCount.innerText = currentLikes + 1;
+    likeCount.innerText = parseInt(likeCount.innerText) + 1;
 }
 
 // Search filter functionality
@@ -859,13 +833,9 @@ document.getElementById("search-bar").addEventListener("input", function(event) 
     let searchTerm = event.target.value.toLowerCase();
     let discussions = document.querySelectorAll("#forum-list li");
 
-    discussions.forEach(function(discussion) {
+    discussions.forEach(discussion => {
         let text = discussion.innerText.toLowerCase();
-        if (text.includes(searchTerm)) {
-            discussion.style.display = "flex";
-        } else {
-            discussion.style.display = "none";
-        }
+        discussion.style.display = text.includes(searchTerm) ? "flex" : "none";
     });
 });
 </script>
