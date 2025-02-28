@@ -710,136 +710,128 @@ document.addEventListener("DOMContentLoaded", () => {
     </script>
     
   
-<!-- Forum Section -->
-<section id="forum" class="p-8 text-center fade-in">
-    <h2 class="text-3xl font-bold">Community Forum</h2>
-    <p class="text-gray-400 mt-2">Join discussions, ask questions, and share ideas.</p>
+    
+    <!-- Forum Section -->
+    <section id="forum" class="text-center">
+        <h2 class="text-3xl font-bold">Community Forum</h2>
+        <p class="text-gray-400 mt-2">Join discussions, ask questions, and share ideas.</p>
 
-    <div class="mt-6 bg-gray-800 p-6 rounded-lg">
-        <form id="forum-form">
-            <input type="text" id="forum-name" placeholder="Your name" class="w-full p-2 rounded-lg text-black mb-2" required>
-            <input type="text" id="forum-input" placeholder="Start a discussion..." class="w-full p-2 rounded-lg text-black" required>
-            <button type="submit" class="mt-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Post</button>
-        </form>
+        <div class="mt-6 bg-gray-800 p-6 rounded-lg">
+            <form id="forum-form">
+                <input type="text" id="forum-name" placeholder="Your name" class="w-full p-2 rounded-lg text-black mb-2" required>
+                <input type="text" id="forum-input" placeholder="Start a discussion..." class="w-full p-2 rounded-lg text-black" required>
+                <button type="submit" class="mt-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Post</button>
+            </form>
 
-        <!-- Search bar for filtering discussions -->
-        <div class="mt-6">
-            <input type="text" id="search-bar" placeholder="Search discussions..." class="p-2 rounded-lg text-black w-full mb-4">
+            <!-- Search bar for filtering discussions -->
+            <div class="mt-6">
+                <input type="text" id="search-bar" placeholder="Search discussions..." class="p-2 rounded-lg text-black w-full mb-4">
+            </div>
+
+            <div class="text-left mt-6">
+                <h3 class="text-xl font-semibold">Recent Discussions</h3>
+                <ul id="forum-list" class="mt-4 space-y-4"></ul>
+            </div>
         </div>
+    </section>
 
-        <div class="text-left mt-6">
-            <h3 class="text-xl font-semibold">Recent Discussions</h3>
-            <ul id="forum-list" class="mt-4 space-y-4">
-                <!-- Example discussions -->
-                <li class="bg-gray-700 p-4 rounded-lg flex justify-between items-start">
+    <script>
+        document.addEventListener("DOMContentLoaded", loadDiscussions);
+        document.getElementById("forum-form").addEventListener("submit", addDiscussion);
+        document.getElementById("search-bar").addEventListener("input", filterDiscussions);
+
+        function addDiscussion(event) {
+            event.preventDefault();
+            let name = document.getElementById("forum-name").value.trim();
+            let text = document.getElementById("forum-input").value.trim();
+            if (!name || !text) {
+                alert("Please enter both your name and a discussion topic!");
+                return;
+            }
+            
+            let discussion = {
+                id: Date.now(),
+                name: name,
+                text: text,
+                time: new Date().toLocaleString(),
+                likes: 0,
+                replies: []
+            };
+            saveDiscussion(discussion);
+            document.getElementById("forum-form").reset();
+        }
+
+        function saveDiscussion(discussion) {
+            let discussions = JSON.parse(localStorage.getItem("discussions")) || [];
+            discussions.unshift(discussion);
+            localStorage.setItem("discussions", JSON.stringify(discussions));
+            loadDiscussions();
+        }
+
+        function loadDiscussions() {
+            let discussions = JSON.parse(localStorage.getItem("discussions")) || [];
+            let forumList = document.getElementById("forum-list");
+            forumList.innerHTML = "";
+            discussions.forEach(discussion => {
+                let li = document.createElement("li");
+                li.className = "bg-gray-700 p-4 rounded-lg flex flex-col space-y-2";
+                li.innerHTML = `
                     <div class="flex items-center space-x-4">
                         <img src="https://via.placeholder.com/40" alt="User Avatar" class="rounded-full w-10 h-10">
-                        <span class="text-white">How to improve coding speed? - <span class="text-gray-400">by Snehasish Nag</span></span>
+                        <div>
+                            <span class="text-white">${discussion.text} - <span class="text-gray-400">by ${discussion.name}</span></span>
+                            <p class="text-gray-400 text-sm">${discussion.time}</p>
+                        </div>
                     </div>
-                    <div class="flex space-x-2">
-                        <button class="text-blue-400 hover:text-blue-500" onclick="addReply(this)">Reply</button>
-                        <button class="text-red-400 hover:text-red-500" onclick="deleteDiscussion(this)">Delete</button>
+                    <div class="flex space-x-4">
+                        <button class="text-blue-400 hover:text-blue-500" onclick="replyToDiscussion(${discussion.id})">Reply</button>
+                        <button class="text-red-400 hover:text-red-500" onclick="deleteDiscussion(${discussion.id})">Delete</button>
+                        <button class="text-yellow-400 hover:text-yellow-500" onclick="likeDiscussion(${discussion.id})">Like (<span>${discussion.likes}</span>)</button>
                     </div>
-                    <!-- Like button and count -->
-                    <div class="flex items-center space-x-2 mt-2">
-                        <button class="text-yellow-400 hover:text-yellow-500" onclick="likeDiscussion(this)">
-                            Like
-                        </button>
-                        <span class="text-white like-count">0</span>
-                    </div>
-                    <!-- Replies section -->
-                    <ul class="replies mt-4 space-y-2 pl-4 hidden"></ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-</section>
+                    <ul class="replies pl-4 hidden"></ul>
+                `;
+                forumList.appendChild(li);
+            });
+        }
 
-<script>
-document.getElementById("forum-form").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent page reload
+        function deleteDiscussion(id) {
+            let discussions = JSON.parse(localStorage.getItem("discussions")) || [];
+            discussions = discussions.filter(d => d.id !== id);
+            localStorage.setItem("discussions", JSON.stringify(discussions));
+            loadDiscussions();
+        }
 
-    // Get input values
-    let name = document.getElementById("forum-name").value.trim();
-    let discussionText = document.getElementById("forum-input").value.trim();
+        function likeDiscussion(id) {
+            let discussions = JSON.parse(localStorage.getItem("discussions")) || [];
+            let discussion = discussions.find(d => d.id === id);
+            if (discussion) {
+                discussion.likes++;
+                localStorage.setItem("discussions", JSON.stringify(discussions));
+                loadDiscussions();
+            }
+        }
 
-    if (!name || !discussionText) {
-        alert("Please enter both your name and a discussion topic!");
-        return;
-    }
+        function replyToDiscussion(id) {
+            let replyText = prompt("Enter your reply:");
+            if (!replyText) return;
+            let discussions = JSON.parse(localStorage.getItem("discussions")) || [];
+            let discussion = discussions.find(d => d.id === id);
+            if (discussion) {
+                discussion.replies.push({ text: replyText, time: new Date().toLocaleString() });
+                localStorage.setItem("discussions", JSON.stringify(discussions));
+                loadDiscussions();
+            }
+        }
 
-    let uniqueId = Date.now(); // Generate unique ID
-
-    // Create new discussion item
-    let newDiscussion = document.createElement("li");
-    newDiscussion.classList.add("bg-gray-700", "p-4", "rounded-lg", "flex", "justify-between", "items-start", "fade-in");
-    newDiscussion.innerHTML = `
-        <div class="flex items-center space-x-4">
-            <img src="https://via.placeholder.com/40" alt="User Avatar" class="rounded-full w-10 h-10">
-            <span class="text-white">${discussionText} - <span class="text-gray-400">by ${name}</span></span>
-        </div>
-        <div class="flex space-x-2">
-            <button class="text-blue-400 hover:text-blue-500" onclick="addReply(this)">Reply</button>
-            <button class="text-red-400 hover:text-red-500" onclick="deleteDiscussion(this)">Delete</button>
-        </div>
-        <div class="flex items-center space-x-2 mt-2">
-            <button class="text-yellow-400 hover:text-yellow-500" onclick="likeDiscussion(this)">
-                Like
-            </button>
-            <span class="text-white like-count">0</span>
-        </div>
-        <ul class="replies mt-4 space-y-2 pl-4 hidden"></ul>
-    `;
-
-    // Append to discussion list
-    document.getElementById("forum-list").prepend(newDiscussion);
-
-    // Clear input fields
-    document.getElementById("forum-name").value = "";
-    document.getElementById("forum-input").value = "";
-});
-
-// Delete discussion
-function deleteDiscussion(button) {
-    button.closest("li").remove();
-}
-
-// Add reply
-function addReply(button) {
-    let discussion = button.closest("li");
-    let repliesSection = discussion.querySelector(".replies");
-    let replyText = prompt("Enter your reply:");
-
-    if (replyText) {
-        let newReply = document.createElement("li");
-        newReply.classList.add("bg-gray-600", "p-3", "rounded-lg", "flex", "items-center", "space-x-4");
-        newReply.innerHTML = `
-            <span class="text-white">${replyText} - <span class="text-gray-400">by Anonymous</span></span>
-        `;
-
-        repliesSection.classList.remove("hidden");
-        repliesSection.prepend(newReply);
-    }
-}
-
-// Like discussion
-function likeDiscussion(button) {
-    let likeCount = button.nextElementSibling;
-    likeCount.innerText = parseInt(likeCount.innerText) + 1;
-}
-
-// Search filter functionality
-document.getElementById("search-bar").addEventListener("input", function(event) {
-    let searchTerm = event.target.value.toLowerCase();
-    let discussions = document.querySelectorAll("#forum-list li");
-
-    discussions.forEach(discussion => {
-        let text = discussion.innerText.toLowerCase();
-        discussion.style.display = text.includes(searchTerm) ? "flex" : "none";
-    });
-});
-</script>
-
+        function filterDiscussions(event) {
+            let searchTerm = event.target.value.toLowerCase();
+            let discussions = document.querySelectorAll("#forum-list li");
+            discussions.forEach(discussion => {
+                let text = discussion.innerText.toLowerCase();
+                discussion.style.display = text.includes(searchTerm) ? "block" : "none";
+            });
+        }
+    </script>
 
     
 <section id="socials" class="p-8 text-center fade-in">
