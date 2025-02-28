@@ -712,19 +712,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
  
     
-    <!-- User Authentication -->
-    <div id="auth" class="text-center mb-6">
-        <input type="text" id="username" placeholder="Enter username" class="p-2 rounded-lg text-black mb-2">
-        <button onclick="loginUser()" class="px-4 py-2 bg-green-500 hover:bg-green-600 rounded-full font-bold">Login</button>
-        <p id="welcome-msg" class="mt-2 hidden"></p>
-    </div>
+
+    
 
     <!-- Forum Section -->
     <section id="forum" class="text-center">
         <h2 class="text-3xl font-bold">Community Forum</h2>
         <p class="text-gray-400 mt-2">Join discussions, ask questions, and share ideas.</p>
 
-        <!-- User Authentication -->
+    <!-- User Authentication -->
     <div id="auth" class="text-center mb-6">
         <input type="text" id="username" placeholder="Enter username" class="p-2 rounded-lg text-black mb-2">
         <button onclick="loginUser()" class="px-4 py-2 bg-green-500 hover:bg-green-600 rounded-full font-bold">Login</button>
@@ -736,12 +732,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 <input type="text" id="forum-input" placeholder="Start a discussion..." class="w-full p-2 rounded-lg text-black" required>
                 <button type="submit" class="mt-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full font-bold">Post</button>
             </form>
-
-            <!-- Search bar for filtering discussions -->
+            
+            <!-- Search Bar -->
             <div class="mt-6">
                 <input type="text" id="search-bar" placeholder="Search discussions..." class="p-2 rounded-lg text-black w-full mb-4">
             </div>
-
+            
             <div class="text-left mt-6">
                 <h3 class="text-xl font-semibold">Recent Discussions</h3>
                 <ul id="forum-list" class="mt-4 space-y-4"></ul>
@@ -758,8 +754,13 @@ document.addEventListener("DOMContentLoaded", () => {
             let username = document.getElementById("username").value.trim();
             if (!username) return alert("Enter a username");
             localStorage.setItem("username", username);
-            document.getElementById("welcome-msg").innerText = Welcome, ${username}!;
+            document.getElementById("welcome-msg").innerText = `Welcome, ${username}!`;
             document.getElementById("welcome-msg").classList.remove("hidden");
+        }
+
+        function getAvatar(username) {
+            let initials = username.charAt(0).toUpperCase();
+            return `<span class='w-10 h-10 bg-blue-500 flex items-center justify-center rounded-full text-white font-bold'>${initials}</span>`;
         }
 
         function addDiscussion(event) {
@@ -775,7 +776,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 username: username,
                 text: text,
                 time: new Date().toLocaleString(),
-                votes: 0
+                votes: 0,
+                pinned: false
             };
             saveDiscussion(discussion);
             document.getElementById("forum-form").reset();
@@ -792,19 +794,24 @@ document.addEventListener("DOMContentLoaded", () => {
             let discussions = JSON.parse(localStorage.getItem("discussions")) || [];
             let forumList = document.getElementById("forum-list");
             forumList.innerHTML = "";
+            
+            discussions.sort((a, b) => b.pinned - a.pinned || b.votes - a.votes);
+            
             discussions.forEach(discussion => {
                 let li = document.createElement("li");
-                li.className = "bg-gray-700 p-4 rounded-lg flex flex-col space-y-2";
-                li.innerHTML = 
-                    <div>
+                li.className = "bg-gray-700 p-4 rounded-lg flex space-x-4 items-center";
+                li.innerHTML = `
+                    ${getAvatar(discussion.username)}
+                    <div class="flex-1">
                         <span class="text-white">${discussion.text} - <span class="text-gray-400">by ${discussion.username}</span></span>
                         <p class="text-gray-400 text-sm">${discussion.time}</p>
+                        <div class="flex space-x-4 mt-2">
+                            <button class="text-green-400 hover:text-green-500" onclick="voteDiscussion(${discussion.id}, 1)">Upvote (<span>${discussion.votes}</span>)</button>
+                            <button class="text-red-400 hover:text-red-500" onclick="voteDiscussion(${discussion.id}, -1)">Downvote</button>
+                            <button class="text-yellow-400 hover:text-yellow-500" onclick="togglePin(${discussion.id})">${discussion.pinned ? 'Unpin' : 'Pin'}</button>
+                        </div>
                     </div>
-                    <div class="flex space-x-4">
-                        <button class="text-green-400 hover:text-green-500" onclick="voteDiscussion(${discussion.id}, 1)">Upvote (<span>${discussion.votes}</span>)</button>
-                        <button class="text-red-400 hover:text-red-500" onclick="voteDiscussion(${discussion.id}, -1)">Downvote</button>
-                    </div>
-                ;
+                `;
                 forumList.appendChild(li);
             });
         }
@@ -819,6 +826,16 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
+        function togglePin(id) {
+            let discussions = JSON.parse(localStorage.getItem("discussions")) || [];
+            let discussion = discussions.find(d => d.id === id);
+            if (discussion) {
+                discussion.pinned = !discussion.pinned;
+                localStorage.setItem("discussions", JSON.stringify(discussions));
+                loadDiscussions();
+            }
+        }
+
         function filterDiscussions(event) {
             let searchTerm = event.target.value.toLowerCase();
             let discussions = document.querySelectorAll("#forum-list li");
@@ -828,6 +845,8 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     </script>
+
+
   
     
 
